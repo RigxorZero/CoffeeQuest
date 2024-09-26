@@ -1,0 +1,1 @@
+ C:\\Users\\Hector\\Documents\\GitHub\\CoffeeQuest\\coffee_quest\\.dart_tool\\flutter_build\\dcbc0fac1f6cf7ed43406d00d029b418\\native_assets.yaml: 
