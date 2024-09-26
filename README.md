@@ -53,34 +53,55 @@ Para instalar y ejecutar este proyecto localmente:
 ### Requerimientos Funcionales
 
 1. **Gestión de Recetas de Café:**
-   - Los usuarios pueden ver, filtrar, personalizar y guardar recetas de café.
-   - Los usuarios pueden compartir recetas con la comunidad y calificar las recetas de otros.
+   - RF1.1: El usuario debe poder ver una lista de recetas de café disponibles en la aplicación.
+   - RF1.2: El usuario debe poder filtrar recetas por técnica de preparación (espresso, pour-over, cold brew, etc.).
+   - RF1.3: El usuario debe poder personalizar las recetas, ajustando parámetros como el tipo de grano, tiempo de extracción y cantidad de agua.
+   - RF1.4: El usuario debe poder guardar recetas personalizadas en una lista de favoritas.
+   - RF1.5: El usuario debe poder compartir sus recetas a través de la aplicación con otros usuarios. (Sin desarrollar)
 
 2. **Guías de Preparación:**
-   - La aplicación incluye guías paso a paso para la preparación de distintos tipos de café (espresso, pour-over, cold brew).
-   - Las guías son personalizables según las preferencias del usuario.
+   - RF2.1: La aplicación debe ofrecer guías paso a paso para diferentes tipos de café.
+   - RF2.2: Cada guía debe poder ser personalizada según las preferencias del usuario (ej. tiempo de preparación, cantidad de café, tipo de grano).
+   - RF2.3: Debe incluirse una sección de sugerencias y mejores prácticas al preparar café según el método seleccionado.
 
 3. **Personalización del Usuario:**
-   - Los usuarios pueden crear un perfil con sus preferencias personales (métodos de extracción, tipo de grano).
-   - Las recetas y sugerencias se adaptan a las preferencias del usuario.
+   - RF3.1: El usuario debe poder crear un perfil donde especifique sus preferencias personales (técnica de extracción favorita, nivel de molienda, tipo de grano preferido).
+   - RF3.2: Las preferencias del usuario deben influir en las recetas y guías sugeridas dentro de la aplicación.
+   - RF3.3: El usuario debe poder actualizar su perfil en cualquier momento.
 
 4. **Comunidad:**
-   - Los usuarios pueden comentar y discutir recetas en una sección de foro o chat.
-   - Funcionalidad de calificación para destacar las mejores recetas.
+   - RF4.1: Los usuarios deben poder dejar reseñas y calificaciones para cada receta de café.
+   - RF4.2: Los usuarios deben poder comentar y discutir sobre recetas en una sección de foro o chat.
+   - RF4.3: La aplicación debe tener una funcionalidad de votación donde las recetas mejor calificadas aparezcan en una sección destacada.
+  
+5. Exploración de Nuevas Recetas:
+
+   - RF6.1: El usuario debe poder buscar recetas nuevas según sus intereses, como ingredientes exóticos o técnicas innovadoras.
+   - RF6.2: Debe existir una opción de "receta del día" que muestre preparaciones destacadas o nuevas cada vez que el usuario accede a la aplicación.
+   - RF6.3: El usuario debe poder explorar recetas que utilizan equipos específicos (ej. Aeropress, Chemex, etc.).
+  
+6. Gestión de Productos Relacionados:
+
+   - RF7.1: La aplicación debe mostrar productos relacionados con la preparación del café (ej. molinos, prensas, etc.).
+   - RF7.2: Los productos deben estar vinculados a las recetas, facilitando la compra de equipo necesario directamente desde la aplicación.
+   - RF7.3: El usuario debe poder recibir sugerencias de productos basados en sus preferencias personales y recetas favoritas.
 
 ### Requerimientos No Funcionales
 
 1. **Compatibilidad Multiplataforma:**
-   - La aplicación debe ser compatible con dispositivos móviles, tabletas y escritorios.
+   - RNF1.1: La aplicación debe estar disponible para dispositivos móviles, tabletas y computadoras de escritorio.
+   - RNF1.2: La interfaz debe adaptarse automáticamente al tamaño de la pantalla del dispositivo.
 
 2. **Rendimiento:**
-   - La aplicación debe cargarse en menos de 3 segundos y la navegación debe ser fluida.
+   - RNF2.1: La aplicación debe cargarse en menos de 3 segundos al iniciar.
+   - RNF2.2: Las transiciones entre pantallas y la navegación deben ser fluidas y sin interrupciones.
 
 3. **Seguridad:**
-   - Se debe garantizar la privacidad de los datos de usuario y permitir la eliminación de cuentas.
+   - RNF3.1: La aplicación debe garantizar la privacidad de los datos del usuario, almacenando sus preferencias y recetas de manera segura.
+   - RNF3.2: Los usuarios deben poder eliminar su cuenta y todos los datos relacionados en cualquier momento.
 
 4. **Escalabilidad:**
-   - La aplicación debe soportar un gran número de usuarios y recetas sin afectar el rendimiento.
+   - RNF4.1: La aplicación debe poder gestionar grandes cantidades de usuarios y recetas sin afectar el rendimiento.
 
 ---
 
