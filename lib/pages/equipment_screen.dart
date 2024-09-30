@@ -3,7 +3,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert'; // Para manejar JSON
 import '../models/equipo.dart'; // Asegúrate de importar la clase Equipo
 
-class EquipmentScreen extends StatefulWidget {
+class EquipmentScreen extends StatefulWidget 
+{
   const EquipmentScreen({super.key, required this.title});
 
   final String title;
@@ -12,21 +13,26 @@ class EquipmentScreen extends StatefulWidget {
   State<EquipmentScreen> createState() => _MyEquipmentScreenState();
 }
 
-class _MyEquipmentScreenState extends State<EquipmentScreen> {
+class _MyEquipmentScreenState extends State<EquipmentScreen> 
+{
   List<Equipo> _equipos = []; // Lista para almacenar los equipos
 
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
     _loadEquipos(); // Cargar los equipos al iniciar
   }
 
-  Future<void> _loadEquipos() async {
+  Future<void> _loadEquipos() async 
+  {
     final String response = await rootBundle.loadString('assets/equipos.json');
     final List<dynamic> data = json.decode(response);
 
-    setState(() {
-      _equipos = data.map((item) => Equipo(
+    setState(() 
+    {
+      _equipos = data.map((item) => Equipo
+      (
         nombreEquipo: item['nombreEquipo'],
         tipo: item['tipo'],
         descripcion: item['descripcion'],
@@ -36,19 +42,26 @@ class _MyEquipmentScreenState extends State<EquipmentScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+  Widget build(BuildContext context) 
+  {
+    return Scaffold
+    (
+      appBar: AppBar
+      (
         title: Text(widget.title),
       ),
-      body: ListView.builder(
+      body: ListView.builder
+      (
         itemCount: _equipos.length,
-        itemBuilder: (context, index) {
+        itemBuilder: (context, index) 
+        {
           final equipo = _equipos[index];
-          return Card(
+          return Card
+          (
             elevation: 4.0,
             margin: const EdgeInsets.all(8.0),
-            child: ListTile(
+            child: ListTile
+            (
               title: Text(equipo.nombreEquipo),
               subtitle: Text(equipo.descripcion),
               leading: Image.asset(equipo.imagen, width: 50, height: 50),

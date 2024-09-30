@@ -18,6 +18,16 @@ class Ingrediente
       _unidadMedida = unidadMedida;
 
     // Metodos
+    factory Ingrediente.fromJson(Map<String, dynamic> json) 
+    {
+      return Ingrediente
+      (
+        nombreIngrediente: json['nombreIngrediente'],
+        cantidad: json['cantidad'],
+        unidadMedida: json['unidadMedida'],
+      );
+    }
+
     void detalleIngrediente()
     {
       print("$_nombreIngrediente: $_cantidad $_unidadMedida");
@@ -27,4 +37,7 @@ class Ingrediente
     String get nombreIngrediente => _nombreIngrediente;
     String get cantidad => _cantidad;
     String get unidadMedida => _unidadMedida;
+
+    // Setter
+    set cantidad(String cantidad) => _cantidad = cantidad;
 }

@@ -52,7 +52,59 @@ class RecetaCafe
         _etiquetas = etiquetas,
         _comentarios = comentarios ?? [];
 
-  // Método para personalizar la receta
+  // Métodos
+  
+  factory RecetaCafe.fromJson
+  (
+    Map<String, dynamic> json,
+    Usuario creador,
+    List<Ingrediente> ingredientesCargados,
+    List<Equipo> equiposCargados,
+  ) 
+  {
+    // Cargar ingredientes desde el JSON
+    List<Ingrediente> ingredientesReceta = (json['ingredientes'] as List).map((ingredienteJson) {
+    // Busca el ingrediente en la lista de ingredientes cargados
+    final ingredienteCargado = ingredientesCargados.firstWhere(
+      (ingrediente) => ingrediente.nombreIngrediente == ingredienteJson['nombreIngrediente'],
+      orElse: () => Ingrediente(
+        nombreIngrediente: ingredienteJson['nombreIngrediente'], // Si no se encuentra, crea uno nuevo
+        cantidad: "0", // Cantidad por defecto si no se encuentra
+        unidadMedida: ingredienteJson['unidadMedida'],
+      ),
+    );
+
+    // Asignar la cantidad de la receta
+    return Ingrediente(
+      nombreIngrediente: ingredienteCargado.nombreIngrediente,
+      cantidad: ingredienteJson['cantidad'], // Esta es la cantidad específica de la receta
+      unidadMedida: ingredienteCargado.unidadMedida,
+    );
+  }).toList();
+
+    List<Equipo> equiposReceta = (json['equipoNecesario'] as List).map((equipoJson) 
+    {
+      return equiposCargados.firstWhere((equipo) => equipo.nombreEquipo == equipoJson['nombreEquipo']);
+    }).toList();
+
+    return RecetaCafe
+    (
+      nombreReceta: json['nombreReceta'],
+      descripcion: json['descripcion'],
+      ingredientes: ingredientesReceta,
+      metodo: json['metodo'],
+      equipoNecesario: equiposReceta,
+      dificultad: json['dificultad'],
+      tiempoPreparacion: json['tiempoPreparacion'],
+      imagen: json['imagen'],
+      calificacionPromedio: json['calificacionPromedio'] ?? 0.0,
+      numCalificaciones: json['numCalificaciones'] ?? 0,
+      usuarioCreador: creador,
+      etiquetas: List<String>.from(json['etiquetas']),
+      comentarios: [],
+    );
+  }
+
   RecetaCafe personalizarReceta(Usuario nuevoCreador) 
   {
     // Crear una nueva instancia de RecetaCafe
@@ -72,7 +124,7 @@ class RecetaCafe
       comentarios: [],
     );
 
-    return nuevaReceta; // Devuelve la nueva receta personalizada
+    return nuevaReceta;
   }
 
   void calificarReceta(Comentarios comentario) 

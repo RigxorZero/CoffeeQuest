@@ -1,0 +1,61 @@
+[
+    {
+      "nombreReceta": "Café Latte",
+      "descripcion": "Una receta clásica de café con leche.",
+      "ingredientes": [
+        {"nombreIngrediente": "Café Molido", "unidadMedida": "cucharadas", "cantidad": "2"},
+        {"nombreIngrediente": "Leche", "unidadMedida": "ml", "cantidad": "250"}
+      ],
+      "metodo": "Cafetera Espresso",
+      "equipoNecesario": [
+        {"nombreEquipo": "Cafetera Espresso", "tipo": "Cafetera", "descripcion": "Cafetera que utiliza presión para hacer café", "imagen": "assets/images/cafetera_espresso.png"}
+      ],
+      "dificultad": "Fácil",
+      "tiempoPreparacion": 5,
+      "imagen": "assets/images/cafe_latte.png",
+      "calificacionPromedio": 0.0,
+      "numCalificaciones": 0,
+      "etiquetas": ["Clásico", "Con leche"],
+      "comentarios": []
+    },
+    {
+      "nombreReceta": "Café Mocha",
+      "descripcion": "Un delicioso café con chocolate y leche.",
+      "ingredientes": [
+        {"nombreIngrediente": "Café Molido", "unidadMedida": "cucharadas", "cantidad": "2"},
+        {"nombreIngrediente": "Leche", "unidadMedida": "ml", "cantidad": "250"},
+        {"nombreIngrediente": "Cacao en Polvo", "unidadMedida": "cucharadas", "cantidad": "1"}
+      ],
+      "metodo": "Cafetera Espresso",
+      "equipoNecesario": [
+        {"nombreEquipo": "Cafetera Espresso", "tipo": "Cafetera", "descripcion": "Cafetera que utiliza presión para hacer café", "imagen": "assets/images/cafetera_espresso.png"}
+      ],
+      "dificultad": "Fácil",
+      "tiempoPreparacion": 5,
+      "imagen": "assets/images/cafe_mocha.png",
+      "calificacionPromedio": 0.0,
+      "numCalificaciones": 0,
+      "etiquetas": ["Chocolate", "Con leche"],
+      "comentarios": []
+    },
+    {
+      "nombreReceta": "Café Americano",
+      "descripcion": "Un café suave diluido en agua caliente.",
+      "ingredientes": [
+        {"nombreIngrediente": "Café Molido", "unidadMedida": "cucharadas", "cantidad": "2"},
+        {"nombreIngrediente": "Agua", "unidadMedida": "ml", "cantidad": "200"}
+      ],
+      "metodo": "Cafetera Espresso",
+      "equipoNecesario": [
+        {"nombreEquipo": "Cafetera Espresso", "tipo": "Cafetera", "descripcion": "Cafetera que utiliza presión para hacer café", "imagen": "assets/images/cafetera_espresso.png"}
+      ],
+      "dificultad": "Fácil",
+      "tiempoPreparacion": 3,
+      "imagen": "assets/images/cafe_americano.png",
+      "calificacionPromedio": 0.0,
+      "numCalificaciones": 0,
+      "etiquetas": ["Simple", "Rápido"],
+      "comentarios": []
+    }
+  ]
+  

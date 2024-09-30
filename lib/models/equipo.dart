@@ -21,6 +21,18 @@ class Equipo
         _imagen = imagen;
 
   // Método
+
+  factory Equipo.fromJson(Map<String, dynamic> json) 
+  {
+    return Equipo
+    (
+      nombreEquipo: json['nombreEquipo'],
+      tipo: json['tipo'],
+      descripcion: json['descripcion'],
+      imagen: json['imagen'],
+    );
+  }
+
   void obtenerRecomendacion()
   {
     

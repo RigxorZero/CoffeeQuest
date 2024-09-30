@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/usuario.dart'; // Asegúrate de importar Usuario
 
-class SessionScreen extends StatefulWidget {
+class SessionScreen extends StatefulWidget 
+{
   const SessionScreen({super.key, required this.title});
 
   final String title;
@@ -11,7 +12,8 @@ class SessionScreen extends StatefulWidget {
   State<SessionScreen> createState() => _SessionScreenState();
 }
 
-class _SessionScreenState extends State<SessionScreen> {
+class _SessionScreenState extends State<SessionScreen> 
+{
   String? _usuario;
   String? _correo;
 
@@ -19,22 +21,27 @@ class _SessionScreenState extends State<SessionScreen> {
   final TextEditingController _correoController = TextEditingController();
 
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     _loadUsuario(); // Cargar el usuario al iniciar
   }
 
-  Future<void> _loadUsuario() async {
+  Future<void> _loadUsuario() async 
+  {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
+    setState(() 
+    {
       _usuario = prefs.getString('usuario');
       _correo = prefs.getString('correo'); // Cargar el correo también
     });
 
     // Si el usuario ya existe, navegar a ProfileScreen
-    if (_usuario != null) {
+    if (_usuario != null) 
+    {
       await Future.delayed(const Duration(seconds: 2));
-      Navigator.pushReplacementNamed(context, '/home', arguments: Usuario(
+      Navigator.pushReplacementNamed(context, '/home', arguments: Usuario
+      (
         nombre: _usuario!,
         email: _correo!,
         metodoFavorito: "Desconocido",
@@ -44,16 +51,19 @@ class _SessionScreenState extends State<SessionScreen> {
     }
   }
 
-  Future<void> _guardarUsuario(String nombreUsuario, String correo) async {
+  Future<void> _guardarUsuario(String nombreUsuario, String correo) async 
+  {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('usuario', nombreUsuario);
     await prefs.setString('correo', correo); // Guardar el correo también
-    setState(() {
+    setState(() 
+    {
       _usuario = nombreUsuario;
     });
 
     // Redirigir a ProfileScreen y reemplazar SessionScreen
-    Navigator.pushReplacementNamed(context, '/home', arguments: Usuario(
+    Navigator.pushReplacementNamed(context, '/home', arguments: Usuario
+    (
       nombre: nombreUsuario,
       email: correo,
       metodoFavorito: "Desconocido",
@@ -62,29 +72,39 @@ class _SessionScreenState extends State<SessionScreen> {
     ));
   }
 
-  Widget _buildCrearUsuario() {
-    return Column(
+  Widget _buildCrearUsuario() 
+  {
+    return Column
+    (
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: 
+      [
         const Text('Por favor, crea tu usuario:'),
-        Padding(
+        Padding
+        (
           padding: const EdgeInsets.all(8.0),
-          child: TextField(
+          child: TextField
+          (
             controller: _nombreController,
             decoration: const InputDecoration(labelText: 'Nombre de usuario'),
           ),
         ),
-        Padding(
+        Padding
+        (
           padding: const EdgeInsets.all(8.0),
-          child: TextField(
+          child: TextField
+          (
             controller: _correoController,
             decoration: const InputDecoration(labelText: 'Correo electrónico'),
             keyboardType: TextInputType.emailAddress,
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            if (_nombreController.text.isNotEmpty && _correoController.text.isNotEmpty) {
+        ElevatedButton
+        (
+          onPressed: () 
+          {
+            if (_nombreController.text.isNotEmpty && _correoController.text.isNotEmpty) 
+            {
               _guardarUsuario(_nombreController.text, _correoController.text);
             }
           },
@@ -95,22 +115,28 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+  Widget build(BuildContext context) 
+  {
+    return Scaffold
+    (
+      appBar: AppBar
+      (
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Center
+      (
         child: _usuario == null 
-          ? _buildCrearUsuario() 
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Bienvenido, $_usuario!', style: const TextStyle(fontSize: 24)), // Mensaje de bienvenida
-                const SizedBox(height: 20),
-                const CircularProgressIndicator(), // Indicador de carga mientras se espera
-              ],
-            ),
+        ? _buildCrearUsuario() 
+        : Column
+        (
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: 
+          [
+            Text('Bienvenido, $_usuario!', style: const TextStyle(fontSize: 24)), // Mensaje de bienvenida
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(), // Indicador de carga mientras se espera
+          ],
+        ),
       ),
     );
   }

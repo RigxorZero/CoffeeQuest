@@ -70,11 +70,15 @@ flutter:
      - assets/animation/Carga.json
      - assets/equipos.json
      - assets/ingredientes.json
+     - assets/recetas.json
      - assets/images/cafetera_espresso.png
      - assets/images/cafetera_goteo.png
      - assets/images/molino_cafe.png
      - assets/images/prensa_francesa.png
      - assets/images/cafetera_italiana.png
+     - assets/images/cafe_latte.png
+     - assets/images/cafe_mocha.png
+     - assets/images/cafe_americano.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
