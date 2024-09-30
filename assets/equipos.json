@@ -1,0 +1,33 @@
+[
+    {
+      "nombreEquipo": "Cafetera Espresso",
+      "tipo": "Cafetera",
+      "descripcion": "Cafetera que prepara café concentrado utilizando presión.",
+      "imagen": "assets/images/cafetera_espresso.png"
+    },
+    {
+        "nombreEquipo": "Cafetera de Goteo",
+        "tipo": "Cafetera",
+        "descripcion": "Cafetera que utiliza un método de goteo para preparar café.",
+        "imagen": "assets/images/cafetera_goteo.png"
+      },
+      {
+        "nombreEquipo": "Molino de Café",
+        "tipo": "Accesorio",
+        "descripcion": "Dispositivo utilizado para moler granos de café.",
+        "imagen": "assets/images/molino_cafe.png"
+      },
+      {
+        "nombreEquipo": "Prensa Francesa",
+        "tipo": "Cafetera",
+        "descripcion": "Método de preparación de café en el que se utiliza una prensa manual.",
+        "imagen": "assets/images/prensa_francesa.png"
+      },
+      {
+        "nombreEquipo": "Cafetera Italiana",
+        "tipo": "Cafetera",
+        "descripcion": "Cafetera que prepara café al hervir agua en la parte inferior y pasarla a través del café molido en la parte superior.",
+        "imagen": "assets/images/cafetera_italiana.png"
+      }
+  ]
+  

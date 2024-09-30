@@ -1,0 +1,93 @@
+[
+    {
+      "nombreIngrediente": "Café Molido",
+      "unidadMedida": "cucharadas",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Agua",
+      "unidadMedida": "ml",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Leche",
+      "unidadMedida": "ml",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Azúcar",
+      "unidadMedida": "cucharada",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Sirope de Vainilla",
+      "unidadMedida": "cucharada",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Canela",
+      "unidadMedida": "pizca",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Hielo",
+      "unidadMedida": "cubos",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Café Instantáneo",
+      "unidadMedida": "cucharadas",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Cacao en Polvo",
+      "unidadMedida": "cucharadas",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Nuez Moscada",
+      "unidadMedida": "pizca",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Miel",
+      "unidadMedida": "cucharada",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Extracto de Almendra",
+      "unidadMedida": "cucharadas",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Leche Condensada",
+      "unidadMedida": "ml",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Sirope de Caramelo",
+      "unidadMedida": "cucharadas",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Crema Batida",
+      "unidadMedida": "ml",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Leche de Coco",
+      "unidadMedida": "ml",
+      "cantidad": "0"
+    },
+    {
+      "nombreIngrediente": "Leche de Avena",
+      "unidadMedida": "ml",
+      "cantidad": "0"
+    },
+    {
+        "nombreIngrediente": "Whisky irlandés",
+        "unidadMedida": "ml",
+        "cantidad": "0"
+    }
+  ]
+  
