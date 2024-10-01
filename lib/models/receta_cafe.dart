@@ -3,8 +3,7 @@ import 'equipo.dart';
 import 'ingrediente.dart';
 import 'usuario.dart';
 
-class RecetaCafe 
-{
+class RecetaCafe {
   // Atributos privados
   String _nombreReceta;  
   String _descripcion;   
@@ -18,12 +17,11 @@ class RecetaCafe
   int _numCalificaciones;
   Usuario _usuarioCreador;
   List<String> _etiquetas;
+  List<String> _elaboracion;
   List<Comentarios> _comentarios;
 
   // Constructor
-  RecetaCafe
-  (
-    {
+  RecetaCafe({
     required String nombreReceta,
     required String descripcion,
     required List<Ingrediente> ingredientes,
@@ -36,9 +34,9 @@ class RecetaCafe
     required int numCalificaciones,
     required Usuario usuarioCreador,
     required List<String> etiquetas,
-    List<Comentarios>? comentarios, // opcional
-    }
-  )  : _nombreReceta = nombreReceta,
+    required List<String> elaboracion,
+    List<Comentarios>? comentarios,
+  })  : _nombreReceta = nombreReceta,
         _descripcion = descripcion,
         _ingredientes = ingredientes,
         _metodo = metodo,
@@ -50,45 +48,39 @@ class RecetaCafe
         _numCalificaciones = numCalificaciones,
         _usuarioCreador = usuarioCreador,
         _etiquetas = etiquetas,
+        _elaboracion = elaboracion, // Asignar los pasos de la receta
         _comentarios = comentarios ?? [];
 
   // Métodos
-  
-  factory RecetaCafe.fromJson
-  (
+  factory RecetaCafe.fromJson(
     Map<String, dynamic> json,
     Usuario creador,
     List<Ingrediente> ingredientesCargados,
     List<Equipo> equiposCargados,
-  ) 
-  {
+  ) {
     // Cargar ingredientes desde el JSON
     List<Ingrediente> ingredientesReceta = (json['ingredientes'] as List).map((ingredienteJson) {
-    // Busca el ingrediente en la lista de ingredientes cargados
-    final ingredienteCargado = ingredientesCargados.firstWhere(
-      (ingrediente) => ingrediente.nombreIngrediente == ingredienteJson['nombreIngrediente'],
-      orElse: () => Ingrediente(
-        nombreIngrediente: ingredienteJson['nombreIngrediente'], // Si no se encuentra, crea uno nuevo
-        cantidad: "0", // Cantidad por defecto si no se encuentra
-        unidadMedida: ingredienteJson['unidadMedida'],
-      ),
-    );
+      final ingredienteCargado = ingredientesCargados.firstWhere(
+        (ingrediente) => ingrediente.nombreIngrediente == ingredienteJson['nombreIngrediente'],
+        orElse: () => Ingrediente(
+          nombreIngrediente: ingredienteJson['nombreIngrediente'],
+          cantidad: "0",
+          unidadMedida: ingredienteJson['unidadMedida'],
+        ),
+      );
+      return Ingrediente(
+        nombreIngrediente: ingredienteCargado.nombreIngrediente,
+        cantidad: ingredienteJson['cantidad'],
+        unidadMedida: ingredienteCargado.unidadMedida,
+      );
+    }).toList();
 
-    // Asignar la cantidad de la receta
-    return Ingrediente(
-      nombreIngrediente: ingredienteCargado.nombreIngrediente,
-      cantidad: ingredienteJson['cantidad'], // Esta es la cantidad específica de la receta
-      unidadMedida: ingredienteCargado.unidadMedida,
-    );
-  }).toList();
-
-    List<Equipo> equiposReceta = (json['equipoNecesario'] as List).map((equipoJson) 
-    {
+    // Cargar equipos desde el JSON
+    List<Equipo> equiposReceta = (json['equipoNecesario'] as List).map((equipoJson) {
       return equiposCargados.firstWhere((equipo) => equipo.nombreEquipo == equipoJson['nombreEquipo']);
     }).toList();
 
-    return RecetaCafe
-    (
+    return RecetaCafe(
       nombreReceta: json['nombreReceta'],
       descripcion: json['descripcion'],
       ingredientes: ingredientesReceta,
@@ -101,53 +93,29 @@ class RecetaCafe
       numCalificaciones: json['numCalificaciones'] ?? 0,
       usuarioCreador: creador,
       etiquetas: List<String>.from(json['etiquetas']),
+      elaboracion: List<String>.from(json['elaboracion']),
       comentarios: [],
     );
   }
 
-  RecetaCafe personalizarReceta(Usuario nuevoCreador) 
+  void agregarComentario(String contenido, int calificacion, Usuario usuarioCreador) 
   {
-    // Crear una nueva instancia de RecetaCafe
-    RecetaCafe nuevaReceta = RecetaCafe(
-      nombreReceta: _nombreReceta,
-      descripcion: _descripcion,
-      ingredientes: _ingredientes,
-      metodo: _metodo,
-      equipoNecesario: _equipoNecesario,
-      dificultad: _dificultad,
-      tiempoPreparacion: _tiempoPreparacion,
-      imagen: _imagen,
-      calificacionPromedio: 0.0,
-      numCalificaciones: 0,
-      usuarioCreador: nuevoCreador,
-      etiquetas: _etiquetas,
-      comentarios: [],
-    );
+  Comentarios nuevoComentario = Comentarios
+  (
+    contenido: contenido,
+    fecha: DateTime.now(),
+    calificacion: calificacion,
+    creador: usuarioCreador,
+  );
 
-    return nuevaReceta;
-  }
+  _comentarios.add(nuevoComentario);
 
-  void calificarReceta(Comentarios comentario) 
-  {
-    // Actualizar la calificación promedio
-    _calificacionPromedio = (_calificacionPromedio * _numCalificaciones + comentario.calificacion) / (_numCalificaciones + 1);
-    _numCalificaciones++;
+  _calificacionPromedio = (_calificacionPromedio * _numCalificaciones + calificacion) / (_numCalificaciones + 1);
+  _numCalificaciones++;
+}
 
-    // Agregar el comentario a la lista de comentarios
-    _comentarios.add(comentario);
-  }
 
-  String compartirReceta() 
-  {
-    return "¡Mira esta deliciosa receta de café! $_nombreReceta";
-  }
-
-  String mostrarGuia()
-  {
-    return "Guía de preparación de $_nombreReceta: $_descripcion";
-  }
-
-  // Getters para acceder a atributos privados
+  // Getters
   String get nombreReceta => _nombreReceta;
   String get descripcion => _descripcion;
   List<Ingrediente> get ingredientes => _ingredientes;
@@ -160,5 +128,6 @@ class RecetaCafe
   int get numCalificaciones => _numCalificaciones;
   Usuario get usuarioCreador => _usuarioCreador;
   List<String> get etiquetas => _etiquetas;
+  List<String> get elaboracion => _elaboracion;
   List<Comentarios> get comentarios => List.unmodifiable(_comentarios); // Retorna una copia inmutable
 }

@@ -34,7 +34,7 @@ class TabBarController extends StatelessWidget
         (
           children: 
           [
-            const MyHomePage(title: 'Inicio'), // La pantalla de inicio
+            MyHomePage(title: 'Inicio', usuario: usuario), // La pantalla de inicio
             ProfileScreen(usuario: usuario), // La pantalla de perfil
           ],
         ),

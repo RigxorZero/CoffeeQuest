@@ -9,9 +9,10 @@ import 'detalle_receta_screen.dart';
 
 class MyHomePage extends StatefulWidget 
 {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.usuario});
 
   final String title;
+  final Usuario usuario;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -112,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage>
                   context,
                   MaterialPageRoute
                   (
-                    builder: (context) => DetalleRecetaScreen(receta: receta),
+                    builder: (context) => DetalleRecetaScreen(receta: receta, usuarioActual: widget.usuario),
                   ),
                 );
               },

@@ -12,17 +12,17 @@ class Comentarios
   Comentarios
   (
     {
-    String? contenido, // Opcional
-    required DateTime fecha,
+    String? contenido,
+    DateTime? fecha,
     required int calificacion,
     required Usuario creador,
     }
-  )  : _contenido = contenido ?? "Sin contenido", // Valor predeterminado
-        _fecha = fecha,
+  )  : _contenido = contenido ?? "Sin contenido",
+        _fecha = fecha ?? DateTime.now(),
         _calificacion = calificacion,
         _creador = creador;
 
-  // Metodos
+  // Métodos
   String mostrarComentario() 
   {
     return "Comentario: $_contenido - Calificación: $_calificacion - Fecha: $_fecha - Creador: ${_creador.nombre}";
@@ -36,10 +36,9 @@ class Comentarios
   void editarComentario(String nuevoContenido, int nuevaCalificacion) 
   {
     _contenido = nuevoContenido;
-    _fecha = DateTime.now();
+    _fecha = DateTime.now(); // Actualizar fecha al editar
     _calificacion = nuevaCalificacion;
   }
-
 
   // Getters para acceder a atributos privados
   String get contenido => _contenido;
