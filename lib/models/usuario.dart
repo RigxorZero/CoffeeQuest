@@ -11,32 +11,38 @@ class Usuario
   List<RecetaCafe> _recetasFavoritas;
 
   // Constructor
-  Usuario
-  (
-    {
+  Usuario({
     required String nombre,
     required String email,
     required String metodoFavorito,
     required String tipoGranoFavorito,
     required String nivelMolienda,
     List<RecetaCafe>? recetasFavoritas, // opcional
-    }
-  )  : _nombre = nombre,
+  })  : _nombre = nombre,
         _email = email,
         _metodoFavorito = metodoFavorito,
         _tipoGranoFavorito = tipoGranoFavorito,
         _nivelMolienda = nivelMolienda,
-        _recetasFavoritas = recetasFavoritas ?? []; // Inicializa como lista vacía si no se proporciona
+        _recetasFavoritas = recetasFavoritas ?? [];
 
   // Métodos
+
   void agregarFavorita(RecetaCafe receta) 
   {
-    _recetasFavoritas.add(receta);
+    if (!esFavorita(receta)) 
+    {
+      _recetasFavoritas.add(receta);
+    }
   }
 
   void eliminarFavorita(RecetaCafe receta) 
   {
     _recetasFavoritas.remove(receta);
+  }
+
+  bool esFavorita(RecetaCafe receta) 
+  {
+    return _recetasFavoritas.contains(receta);
   }
 
   void verFavoritas() 
@@ -59,7 +65,7 @@ class Usuario
     _nivelMolienda = molienda;
   }
 
-  // Getters para acceder a atributos privados
+  // Getters para acceder a los atributos privados
   String get nombre => _nombre;
   String get email => _email;
   String get metodoFavorito => _metodoFavorito;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/usuario.dart'; // Asegúrate de importar Usuario
+import '../models/usuario.dart';
 
 class SessionScreen extends StatefulWidget 
 {
@@ -33,10 +33,9 @@ class _SessionScreenState extends State<SessionScreen>
     setState(() 
     {
       _usuario = prefs.getString('usuario');
-      _correo = prefs.getString('correo'); // Cargar el correo también
+      _correo = prefs.getString('correo');
     });
 
-    // Si el usuario ya existe, navegar a ProfileScreen
     if (_usuario != null) 
     {
       await Future.delayed(const Duration(seconds: 2));

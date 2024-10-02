@@ -5,7 +5,7 @@ import '../models/receta_cafe.dart';
 import '../models/usuario.dart';
 import '../models/ingrediente.dart';
 import '../models/equipo.dart';
-import 'detalle_receta_screen.dart';
+import 'details_receta_screen.dart';
 
 class MyHomePage extends StatefulWidget 
 {
@@ -22,13 +22,13 @@ class _MyHomePageState extends State<MyHomePage>
 {
   List<RecetaCafe> _recetas = [];
   List<Ingrediente> _ingredientes = []; 
-  List<Equipo> _equipos = []; // Lista para almacenar los equipos
+  List<Equipo> _equipos = [];
 
   @override
   void initState() 
   {
     super.initState();
-    _loadData(); // Cargar ingredientes, equipos y recetas
+    _loadData();
   }
 
   // Cargar los datos necesarios (ingredientes, equipos y recetas)

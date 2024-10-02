@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/usuario.dart'; // Asegúrate de importar la clase Usuario
+import '../models/usuario.dart';
+import 'details_receta_screen.dart';
 
 class ProfileScreen extends StatefulWidget 
 {
@@ -57,7 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   {
     return Scaffold
     (
-
       body: Padding
       (
         padding: const EdgeInsets.all(16.0),
@@ -97,7 +97,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
             // Dropdown para Tipo de Grano
             const Text('Tipo de Grano Favorito:', style: TextStyle(fontSize: 18)),
-            DropdownButton<String>(
+            DropdownButton<String>
+            (
               value: _tipoGranoSeleccionado,
               items: _tiposGrano.map((String tipo) 
               {
@@ -122,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             DropdownButton<String>
             (
               value: _nivelMoliendaSeleccionado,
-              items: _nivelesMolienda.map((String nivel) 
+              items: _nivelesMolienda.map((String nivel)
               {
                 return DropdownMenuItem<String>
                 (
@@ -145,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             (
               onPressed: () 
               {
-                setState(()
+                setState(() 
                 {
                   // Guardar preferencias en el objeto usuario
                   widget.usuario.actualizarPreferencias
@@ -174,9 +175,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                 itemCount: widget.usuario.recetasFavoritas.length,
                 itemBuilder: (context, index) 
                 {
-                  return ListTile
+                  return Card
                   (
-                    title: Text(widget.usuario.recetasFavoritas[index].nombreReceta),
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile
+                    (
+                      title: Text(widget.usuario.recetasFavoritas[index].nombreReceta),
+                      subtitle: Text(widget.usuario.recetasFavoritas[index].descripcion),
+                      leading: Image.asset(widget.usuario.recetasFavoritas[index].imagen, width: 50, height: 50),
+                      onTap: () 
+                      {
+                        // Navegar a la pantalla de detalles de la receta
+                        Navigator.push
+                        (
+                          context,
+                          MaterialPageRoute
+                          (
+                            builder: (context) => DetalleRecetaScreen
+                            (
+                              receta: widget.usuario.recetasFavoritas[index],
+                              usuarioActual: widget.usuario,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   );
                 },
               ),

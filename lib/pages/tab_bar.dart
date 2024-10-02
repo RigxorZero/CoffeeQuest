@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // Importa HomeScreen
-import 'profile_screen.dart'; // Importa ProfileScreen
-import '../models/usuario.dart'; // Importa Usuario
+import 'home_screen.dart';
+import 'profile_screen.dart';
+import '../models/usuario.dart';
 
 class TabBarController extends StatelessWidget 
 {
-  const TabBarController({Key? key}) : super(key: key);
+  const TabBarController({super.key});
 
   @override
   Widget build(BuildContext context) 
@@ -25,8 +25,8 @@ class TabBarController extends StatelessWidget
           (
             tabs:
             [
-              Tab(text: 'Recetas'), // Pestaña para HomeScreen
-              Tab(text: 'Perfil'), // Pestaña para ProfileScreen
+              Tab(text: 'Recetas'),
+              Tab(text: 'Perfil'),
             ],
           ),
         ),
@@ -34,8 +34,8 @@ class TabBarController extends StatelessWidget
         (
           children: 
           [
-            MyHomePage(title: 'Inicio', usuario: usuario), // La pantalla de inicio
-            ProfileScreen(usuario: usuario), // La pantalla de perfil
+            MyHomePage(title: 'Inicio', usuario: usuario),
+            ProfileScreen(usuario: usuario),
           ],
         ),
       ),

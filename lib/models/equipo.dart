@@ -1,41 +1,34 @@
 class Equipo 
 {
   // Atributos
-  String _nombreEquipo;  
-  String _tipo;          
-  String _descripcion;   
-  String _imagen;        
+  String _nombreEquipo;
+  String _tipo;
+  String _descripcion;
+  String _imagen;
+  List<String> _enlacesCompra;
 
   // Constructor
-  Equipo
-  (
-    {
+  Equipo({
     required String nombreEquipo,
     required String tipo,
     required String descripcion,
     required String imagen,
-    }
-  )  : _nombreEquipo = nombreEquipo,
+    required List<String> enlacesCompra,
+  })  : _nombreEquipo = nombreEquipo,
         _tipo = tipo,
         _descripcion = descripcion,
-        _imagen = imagen;
+        _imagen = imagen,
+        _enlacesCompra = enlacesCompra;
 
   // Método
-
-  factory Equipo.fromJson(Map<String, dynamic> json) 
-  {
-    return Equipo
-    (
+  factory Equipo.fromJson(Map<String, dynamic> json) {
+    return Equipo(
       nombreEquipo: json['nombreEquipo'],
       tipo: json['tipo'],
       descripcion: json['descripcion'],
       imagen: json['imagen'],
+      enlacesCompra: List<String>.from(json['enlacesCompra'] ?? []),
     );
-  }
-
-  void obtenerRecomendacion()
-  {
-    
   }
 
   // Getters para acceder a los atributos privados
@@ -43,4 +36,5 @@ class Equipo
   String get tipo => _tipo;
   String get descripcion => _descripcion;
   String get imagen => _imagen;
+  List<String> get enlacesCompra => _enlacesCompra;
 }

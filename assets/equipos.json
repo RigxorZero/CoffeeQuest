@@ -1,33 +1,57 @@
 [
-    {
+  {
       "nombreEquipo": "Cafetera Espresso",
       "tipo": "Cafetera",
       "descripcion": "Cafetera que prepara café concentrado utilizando presión.",
-      "imagen": "assets/images/cafetera_espresso.png"
-    },
-    {
-        "nombreEquipo": "Cafetera de Goteo",
-        "tipo": "Cafetera",
-        "descripcion": "Cafetera que utiliza un método de goteo para preparar café.",
-        "imagen": "assets/images/cafetera_goteo.png"
-      },
-      {
-        "nombreEquipo": "Molino de Café",
-        "tipo": "Accesorio",
-        "descripcion": "Dispositivo utilizado para moler granos de café.",
-        "imagen": "assets/images/molino_cafe.png"
-      },
-      {
-        "nombreEquipo": "Prensa Francesa",
-        "tipo": "Cafetera",
-        "descripcion": "Método de preparación de café en el que se utiliza una prensa manual.",
-        "imagen": "assets/images/prensa_francesa.png"
-      },
-      {
-        "nombreEquipo": "Cafetera Italiana",
-        "tipo": "Cafetera",
-        "descripcion": "Cafetera que prepara café al hervir agua en la parte inferior y pasarla a través del café molido en la parte superior.",
-        "imagen": "assets/images/cafetera_italiana.png"
-      }
-  ]
-  
+      "imagen": "assets/images/cafetera_espresso.png",
+      "enlacesCompra": [
+          "https://www.mercadolibre.cl/cafetera-nespresso-inissia-color-rojo/p/MLC24542760#searchVariation%3DMLC24542760%26position%3D35%26search_layout%3Dstack%26type%3Dproduct%26tracking_id%3Dd079b5d7-ae82-42db-ad0f-4900f13b107a",
+          "https://www.mercadolibre.cl/cafetera-milano-coffee-3-en-1-gris-easyways/p/MLC18732959?pdp_filters=item_id:MLC1104155468#is_advertising=true&searchVariation=MLC18732959&position=1&search_layout=stack&type=pad&tracking_id=d079b5d7-ae82-42db-ad0f-4900f13b107a&is_advertising=true&ad_domain=VQCATCORE_LST&ad_position=1&ad_click_id=N2Y3MzhlODEtZjAxYi00YzE2LWFhMzctMTEyNTQ4N2EzZmM2",
+          "https://www.mercadolibre.cl/cafetera-nescafe-dolce-gusto-nescafe-piccolo-xs-de-corte-manual-negra-para-capsulas-monodosis-220v/p/MLC17361076#searchVariation%3DMLC17361076%26position%3D11%26search_layout%3Dstack%26type%3Dproduct%26tracking_id%3Dd079b5d7-ae82-42db-ad0f-4900f13b107a"
+      ]
+  },
+  {
+      "nombreEquipo": "Cafetera de Goteo",
+      "tipo": "Cafetera",
+      "descripcion": "Cafetera que utiliza un método de goteo para preparar café.",
+      "imagen": "assets/images/cafetera_goteo.png",
+      "enlacesCompra": [
+          "https://ejemplo.com/cafetera-goteo-1",
+          "https://ejemplo.com/cafetera-goteo-2",
+          "https://ejemplo.com/cafetera-goteo-3"
+      ]
+  },
+  {
+      "nombreEquipo": "Molino de Café",
+      "tipo": "Accesorio",
+      "descripcion": "Dispositivo utilizado para moler granos de café.",
+      "imagen": "assets/images/molino_cafe.png",
+      "enlacesCompra": [
+          "https://ejemplo.com/molino-cafe-1",
+          "https://ejemplo.com/molino-cafe-2",
+          "https://ejemplo.com/molino-cafe-3"
+      ]
+  },
+  {
+      "nombreEquipo": "Prensa Francesa",
+      "tipo": "Cafetera",
+      "descripcion": "Método de preparación de café en el que se utiliza una prensa manual.",
+      "imagen": "assets/images/prensa_francesa.png",
+      "enlacesCompra": [
+          "https://ejemplo.com/prensa-francesa-1",
+          "https://ejemplo.com/prensa-francesa-2",
+          "https://ejemplo.com/prensa-francesa-3"
+      ]
+  },
+  {
+      "nombreEquipo": "Cafetera Italiana",
+      "tipo": "Cafetera",
+      "descripcion": "Cafetera que prepara café al hervir agua en la parte inferior y pasarla a través del café molido en la parte superior.",
+      "imagen": "assets/images/cafetera_italiana.png",
+      "enlacesCompra": [
+          "https://ejemplo.com/cafetera-italiana-1",
+          "https://ejemplo.com/cafetera-italiana-2",
+          "https://ejemplo.com/cafetera-italiana-3"
+      ]
+  }
+]

@@ -19,9 +19,9 @@ class SplashScreen extends StatelessWidget
         height: 300,
         fit: BoxFit.cover,
       ),
-      nextScreen: const SessionScreen(title: "Sesión"), // Redirige a SessionScreen
-      duration: 4000,  // Duración de 4 segundos
-      splashTransition: SplashTransition.fadeTransition,  // Transición suave
+      nextScreen: const SessionScreen(title: "Sesión"),
+      duration: 4000, 
+      splashTransition: SplashTransition.fadeTransition,
       backgroundColor: const Color.fromARGB(255, 116, 73, 36),
     );
   }

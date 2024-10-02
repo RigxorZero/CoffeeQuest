@@ -4,30 +4,36 @@ import 'pages/splash_screen.dart'; // Importar SplashScreen
 import 'pages/session_screen.dart'; // Importar SessionScreen
 import 'pages/tab_bar.dart'; // Importar TabBarController
 
-void main() {
+void main() 
+{
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget 
+{
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) 
+  {
     var logger = Logger();
     logger.i("Logger is working!");
 
-    return MaterialApp(
+    return MaterialApp
+    (
       title: 'Coffee Quest',
-      theme: ThemeData(
+      theme: ThemeData
+      (
         fontFamily: 'Aurora',
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 54, 32, 21)),
         useMaterial3: true,
       ),
       initialRoute: '/',  // Ruta inicial
-      routes: {
-        '/': (context) => const SplashScreen(), // Ruta para SplashScreen
-        '/session': (context) => const SessionScreen(title: 'Inicio sesión'), // Ruta para SessionScreen
-        '/home': (context) => const TabBarController(), // Ruta para TabBarController
+      routes: 
+      {
+        '/': (context) => const SplashScreen(),
+        '/session': (context) => const SessionScreen(title: 'Inicio sesión'),
+        '/home': (context) => const TabBarController(),
       },
     );
   }

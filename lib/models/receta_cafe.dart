@@ -3,7 +3,8 @@ import 'equipo.dart';
 import 'ingrediente.dart';
 import 'usuario.dart';
 
-class RecetaCafe {
+class RecetaCafe 
+{
   // Atributos privados
   String _nombreReceta;  
   String _descripcion;   
@@ -21,7 +22,8 @@ class RecetaCafe {
   List<Comentarios> _comentarios;
 
   // Constructor
-  RecetaCafe({
+  RecetaCafe
+  ({
     required String nombreReceta,
     required String descripcion,
     required List<Ingrediente> ingredientes,
@@ -52,23 +54,29 @@ class RecetaCafe {
         _comentarios = comentarios ?? [];
 
   // Métodos
-  factory RecetaCafe.fromJson(
+  factory RecetaCafe.fromJson
+  (
     Map<String, dynamic> json,
     Usuario creador,
     List<Ingrediente> ingredientesCargados,
     List<Equipo> equiposCargados,
-  ) {
+  ) 
+  {
     // Cargar ingredientes desde el JSON
-    List<Ingrediente> ingredientesReceta = (json['ingredientes'] as List).map((ingredienteJson) {
-      final ingredienteCargado = ingredientesCargados.firstWhere(
+    List<Ingrediente> ingredientesReceta = (json['ingredientes'] as List).map((ingredienteJson) 
+    {
+      final ingredienteCargado = ingredientesCargados.firstWhere
+      (
         (ingrediente) => ingrediente.nombreIngrediente == ingredienteJson['nombreIngrediente'],
-        orElse: () => Ingrediente(
+        orElse: () => Ingrediente
+        (
           nombreIngrediente: ingredienteJson['nombreIngrediente'],
           cantidad: "0",
           unidadMedida: ingredienteJson['unidadMedida'],
         ),
       );
-      return Ingrediente(
+      return Ingrediente
+      (
         nombreIngrediente: ingredienteCargado.nombreIngrediente,
         cantidad: ingredienteJson['cantidad'],
         unidadMedida: ingredienteCargado.unidadMedida,
@@ -76,11 +84,13 @@ class RecetaCafe {
     }).toList();
 
     // Cargar equipos desde el JSON
-    List<Equipo> equiposReceta = (json['equipoNecesario'] as List).map((equipoJson) {
+    List<Equipo> equiposReceta = (json['equipoNecesario'] as List).map((equipoJson) 
+    {
       return equiposCargados.firstWhere((equipo) => equipo.nombreEquipo == equipoJson['nombreEquipo']);
     }).toList();
 
-    return RecetaCafe(
+    return RecetaCafe
+    (
       nombreReceta: json['nombreReceta'],
       descripcion: json['descripcion'],
       ingredientes: ingredientesReceta,
@@ -98,22 +108,31 @@ class RecetaCafe {
     );
   }
 
-  void agregarComentario(String contenido, int calificacion, Usuario usuarioCreador) 
+    void agregarComentario(String contenido, int calificacion, Usuario usuarioCreador) 
+    {
+      Comentarios nuevoComentario = Comentarios
+      (
+        contenido: contenido,
+        fecha: DateTime.now(),
+        calificacion: calificacion,
+        creador: usuarioCreador,
+      );
+
+    _comentarios.add(nuevoComentario);
+
+    _calificacionPromedio = (_calificacionPromedio * _numCalificaciones + calificacion) / (_numCalificaciones + 1);
+    _numCalificaciones++;
+  }
+
+@override
+  bool operator ==(Object other) 
   {
-  Comentarios nuevoComentario = Comentarios
-  (
-    contenido: contenido,
-    fecha: DateTime.now(),
-    calificacion: calificacion,
-    creador: usuarioCreador,
-  );
+    if (identical(this, other)) return true;
+    return other is RecetaCafe && other._nombreReceta == _nombreReceta;
+  }
 
-  _comentarios.add(nuevoComentario);
-
-  _calificacionPromedio = (_calificacionPromedio * _numCalificaciones + calificacion) / (_numCalificaciones + 1);
-  _numCalificaciones++;
-}
-
+  @override
+  int get hashCode => _nombreReceta.hashCode;
 
   // Getters
   String get nombreReceta => _nombreReceta;
