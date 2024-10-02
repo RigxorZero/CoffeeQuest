@@ -74,17 +74,17 @@ Para instalar y ejecutar este proyecto localmente:
    - RF4.2: Los usuarios deben poder comentar y discutir sobre recetas en una sección de foro o chat.
    - RF4.3: La aplicación debe tener una funcionalidad de votación donde las recetas mejor calificadas aparezcan en una sección destacada.
   
-5. Exploración de Nuevas Recetas:
+5. **Exploración de Nuevas Recetas:**
 
-   - RF6.1: El usuario debe poder buscar recetas nuevas según sus intereses, como ingredientes exóticos o técnicas innovadoras.
-   - RF6.2: Debe existir una opción de "receta del día" que muestre preparaciones destacadas o nuevas cada vez que el usuario accede a la aplicación.
-   - RF6.3: El usuario debe poder explorar recetas que utilizan equipos específicos (ej. Aeropress, Chemex, etc.).
+   - RF5.1: El usuario debe poder buscar recetas nuevas según sus intereses, como ingredientes exóticos o técnicas innovadoras.
+   - RF5.2: Debe existir una opción de "receta del día" que muestre preparaciones destacadas o nuevas cada vez que el usuario accede a la aplicación.
+   - RF5.3: El usuario debe poder explorar recetas que utilizan equipos específicos (ej. Aeropress, Chemex, etc.).
   
-6. Gestión de Productos Relacionados:
+6. **Gestión de Productos Relacionados:**
 
-   - RF7.1: La aplicación debe mostrar productos relacionados con la preparación del café (ej. molinos, prensas, etc.).
-   - RF7.2: Los productos deben estar vinculados a las recetas, facilitando la compra de equipo necesario directamente desde la aplicación.
-   - RF7.3: El usuario debe poder recibir sugerencias de productos basados en sus preferencias personales y recetas favoritas.
+   - RF6.1: La aplicación debe mostrar productos relacionados con la preparación del café (ej. molinos, prensas, etc.).
+   - RF6.2: Los productos deben estar vinculados a las recetas, facilitando la compra de equipo necesario directamente desde la aplicación.
+   - RF6.3: El usuario debe poder recibir sugerencias de productos basados en sus preferencias personales y recetas favoritas.
 
 ### Requerimientos No Funcionales
 
