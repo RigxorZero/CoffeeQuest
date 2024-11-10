@@ -37,6 +37,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
     (
       appBar: AppBar
       (
+        backgroundColor: const Color(0xFFD9AB82),
         title: Text(widget.receta.nombreReceta),
         actions: 
         [
@@ -100,26 +101,98 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 20),
 
               // Descripción de la receta
-              Text(widget.receta.descripcion, style: const TextStyle(fontSize: 16)),
+              Text(widget.receta.descripcion, style: const TextStyle(fontSize: 20)),
               const SizedBox(height: 20),
 
               // Método de preparación
-              Text('Método de Preparación: ${widget.receta.metodo}', style: const TextStyle(fontSize: 18)),
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
+                    'Método de Preparación:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5), // Espaciado entre los textos
+                  Text
+                  (
+                    widget.receta.metodo,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              
+              // Dificultad
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
+                    'Dificultad:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5), // Espaciado entre los textos
+                  Text
+                  (
+                    widget.receta.dificultad,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
 
-              // Dificultad y tiempo de preparación
-              Text('Dificultad: ${widget.receta.dificultad}', style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 10),
-              Text('Tiempo de Preparación: ${widget.receta.tiempoPreparacion} minutos', style: const TextStyle(fontSize: 18)),
+              // Tiempo de preparación
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
+                    'Tiempo de Preparación:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5), // Espaciado entre los textos
+                  Text
+                  (
+                    widget.receta.tiempoPreparacion.toString(),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const Text
+                  (
+                    ' minutos',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
 
               // Autor de la receta
-              Text('Autor: ${widget.receta.usuarioCreador.nombre}', style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 20),
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
+                    'Autor:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5), // Espaciado entre los textos
+                  Text
+                  (
+                    widget.receta.usuarioCreador.nombre,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
 
               // Ingredientes
-              const Text('Ingredientes', style: TextStyle(fontSize: 24)),
-              const SizedBox(height: 10),
+              const Text('Ingredientes', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 2),
+
               // ListView de ingredientes
               ListView.builder
               (
@@ -131,14 +204,37 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
                   final ingrediente = widget.receta.ingredientes[index];
                   return ListTile
                   (
-                    title: Text('${ingrediente.nombreIngrediente}: ${ingrediente.cantidad} ${ingrediente.unidadMedida}'),
+                    title: Row
+                    (
+                      children: 
+                      [
+                        Text
+                        (
+                          '${ingrediente.nombreIngrediente}: ',
+                          style: const TextStyle
+                          (
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text
+                        (
+                          '${ingrediente.cantidad} ${ingrediente.unidadMedida}',
+                          style: const TextStyle
+                          (
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
-              const SizedBox(height: 20),
+            const SizedBox(height: 10),
+
 
               // Equipo necesario
-              const Text('Equipo Necesario', style: TextStyle(fontSize: 24)),
+              const Text('Equipo Necesario', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               // ListView de equipos
               ListView.builder
@@ -160,7 +256,6 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
                       leading: Image.asset(equipo.imagen, width: 50, height: 50),
                       onTap: () 
                       {
-                        // Navegar a la pantalla de recomendación de equipo sin recrear la clase
                         Navigator.push
                         (
                           context,
@@ -183,7 +278,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 20),
 
               // Proceso de elaboración
-              const Text('Elaboración:', style: TextStyle(fontSize: 24)),
+              const Text('Elaboración:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               // ListView numerado para los pasos de elaboración
               ListView.builder
@@ -199,7 +294,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration
                     (
-                      color: Colors.grey[200],
+                      color: const Color(0xFFD9AB82),
                       borderRadius: BorderRadius.circular(8.0),
                       border: Border.all(color: Colors.grey),
                     ),
@@ -209,8 +304,8 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
                       [
                         CircleAvatar
                         (
-                          backgroundColor: Theme.of(context).primaryColor,
-                          child: Text('${index + 1}', style: const TextStyle(color: Colors.white)),
+                          backgroundColor: const Color(0xFFA6785D),
+                          child: Text('${index + 1}', style: const TextStyle(color: Color.fromARGB(255, 255, 252, 252))),
                         ),
                         const SizedBox(width: 10),
                         Expanded
@@ -218,7 +313,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
                           child: Text
                           (
                             widget.receta.elaboracion[index],
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
                       ],
@@ -234,7 +329,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 20),
 
               // Sección para agregar calificación y comentario
-              const Text('Calificación y Comentario', style: TextStyle(fontSize: 24)),
+              const Text('Calificación y Comentario', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               DropdownButton<int>(
                 hint: const Text('Selecciona una calificación'),
@@ -269,6 +364,10 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 10),
               ElevatedButton
               (
+                style: ElevatedButton.styleFrom
+                (
+                  backgroundColor: const Color(0xFFD9AB82),
+                ),
                 onPressed: () 
                 {
                   if (_calificacionSeleccionada != null && _comentarioController.text.isNotEmpty) 
@@ -306,8 +405,9 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 20),
 
               // Listado de comentarios
-              const Text('Comentarios:', style: TextStyle(fontSize: 24)),
-              ListView.builder(
+              const Text('Comentarios:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              ListView.builder
+              (
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.receta.comentarios.length,

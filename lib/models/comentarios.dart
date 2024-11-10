@@ -1,7 +1,6 @@
 import 'usuario.dart';
 
-class Comentarios 
-{
+class Comentarios {
   // Atributos
   String _contenido;
   DateTime _fecha;
@@ -9,35 +8,39 @@ class Comentarios
   Usuario _creador;
 
   // Constructor
-  Comentarios
-  (
-    {
+  Comentarios({
     String? contenido,
     DateTime? fecha,
     required int calificacion,
     required Usuario creador,
-    }
-  )  : _contenido = contenido ?? "Sin contenido",
+  })  : _contenido = contenido ?? "Sin contenido",
         _fecha = fecha ?? DateTime.now(),
         _calificacion = calificacion,
         _creador = creador;
 
   // Métodos
-  String mostrarComentario() 
-  {
+  String mostrarComentario() {
     return "Comentario: $_contenido - Calificación: $_calificacion - Fecha: $_fecha - Creador: ${_creador.nombre}";
   }
 
-  void eliminarComentario() 
-  {
+  void eliminarComentario() {
     _contenido = "Comentario eliminado";
   }
 
-  void editarComentario(String nuevoContenido, int nuevaCalificacion) 
-  {
+  void editarComentario(String nuevoContenido, int nuevaCalificacion) {
     _contenido = nuevoContenido;
     _fecha = DateTime.now(); // Actualizar fecha al editar
     _calificacion = nuevaCalificacion;
+  }
+
+  // Método toJson para convertir un objeto Comentarios en Map
+  Map<String, dynamic> toJson() {
+    return {
+      'contenido': _contenido,
+      'fecha': _fecha.toIso8601String(),
+      'calificacion': _calificacion,
+      'creador': _creador.toJson(), 
+    };
   }
 
   // Getters para acceder a atributos privados

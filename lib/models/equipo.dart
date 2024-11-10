@@ -1,5 +1,4 @@
-class Equipo 
-{
+class Equipo {
   // Atributos
   String _nombreEquipo;
   String _tipo;
@@ -29,6 +28,17 @@ class Equipo
       imagen: json['imagen'],
       enlacesCompra: List<String>.from(json['enlacesCompra'] ?? []),
     );
+  }
+
+  // Método toJson para convertir un objeto Equipo en Map
+  Map<String, dynamic> toJson() {
+    return {
+      'nombreEquipo': _nombreEquipo,
+      'tipo': _tipo,
+      'descripcion': _descripcion,
+      'imagen': _imagen,
+      'enlacesCompra': _enlacesCompra,
+    };
   }
 
   // Getters para acceder a los atributos privados

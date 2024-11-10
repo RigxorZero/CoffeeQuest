@@ -19,6 +19,7 @@ class RecomendacionEquipoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFFD9AB82),
         title: Text(nombreEquipo),
       ),
       body: Padding(
@@ -26,7 +27,7 @@ class RecomendacionEquipoScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(imagen, width: double.infinity, height: 200, fit: BoxFit.cover),
+            Image.asset(imagen, width: double.infinity, height: 200, fit: BoxFit.contain),
             const SizedBox(height: 20),
             Text(nombreEquipo, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
@@ -40,10 +41,10 @@ class RecomendacionEquipoScreen extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
-                    leading: const Icon(Icons.shopping_cart, color: Colors.blue),
-                    title: Text('Comprar aquí', style: TextStyle(fontSize: 16)),
-                    trailing: const Icon(Icons.arrow_forward, color: Colors.blue),
-                    tileColor: Colors.blue.shade50,
+                    leading: const Icon(Icons.shopping_cart, color: Color(0xFF40352B)),
+                    title: const Text('Comprar aquí', style: TextStyle(fontSize: 16, color: Color(0xFFF2E3D5))),
+                    trailing: const Icon(Icons.arrow_forward, color: Color(0xFF40352B)),
+                    tileColor: const Color(0xFFA6785D),
                     onTap: () {
                       _launchUrl(enlace);
                     },

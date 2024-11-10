@@ -66,15 +66,49 @@ class _ProfileScreenState extends State<ProfileScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: 
           [
-            Text('Nombre: ${widget.usuario.nombre}', style: const TextStyle(fontSize: 20)),
-            const SizedBox(height: 10),
-            Text('Email: ${widget.usuario.email}', style: const TextStyle(fontSize: 20)),
-            const SizedBox(height: 20),
-            const Text('Preferencias de Café', style: TextStyle(fontSize: 24)),
+            Row
+              (
+                children: 
+                [
+                  const Text
+                  (
+                    'Nombre:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5), // Espaciado entre los textos
+                  Text
+                  (
+                    widget.usuario.nombre,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
+                    'Email:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5), // Espaciado entre los textos
+                  Text
+                  (
+                    widget.usuario.email,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+            const Text('Preferencias de Café', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
 
             const SizedBox(height: 10),
             // Dropdown para Método de Preparación
-            const Text('Método de Preparación:', style: TextStyle(fontSize: 18)),
+            const Text('Método de Preparación:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             DropdownButton<String>(
               value: _metodoSeleccionado,
               items: _metodos.map((String metodo) 
@@ -96,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             const SizedBox(height: 10),
 
             // Dropdown para Tipo de Grano
-            const Text('Tipo de Grano Favorito:', style: TextStyle(fontSize: 18)),
+            const Text('Tipo de Grano Favorito:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             DropdownButton<String>
             (
               value: _tipoGranoSeleccionado,
@@ -119,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             const SizedBox(height: 10),
 
             // Dropdown para Nivel de Molienda
-            const Text('Nivel de Molienda:', style: TextStyle(fontSize: 18)),
+            const Text('Nivel de Molienda:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             DropdownButton<String>
             (
               value: _nivelMoliendaSeleccionado,
@@ -167,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
 
             const SizedBox(height: 20),
-            const Text('Recetas Favoritas:', style: TextStyle(fontSize: 24)),
+            const Text('Recetas Favoritas:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Expanded
             (
               child: ListView.builder

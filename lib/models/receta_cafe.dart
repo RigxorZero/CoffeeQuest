@@ -2,6 +2,9 @@ import 'comentarios.dart';
 import 'equipo.dart';
 import 'ingrediente.dart';
 import 'usuario.dart';
+import 'dart:io';
+import 'dart:convert';
+
 
 class RecetaCafe 
 {
@@ -149,4 +152,47 @@ class RecetaCafe
   List<String> get etiquetas => _etiquetas;
   List<String> get elaboracion => _elaboracion;
   List<Comentarios> get comentarios => List.unmodifiable(_comentarios); // Retorna una copia inmutable
+
+  Map<String, dynamic> toJson() 
+    {
+      return 
+      {
+        'nombreReceta': _nombreReceta,
+        'descripcion': _descripcion,
+        'ingredientes': _ingredientes.map((ingrediente) => ingrediente.toJson()).toList(),
+        'metodo': _metodo,
+        'equipoNecesario': _equipoNecesario.map((equipo) => equipo.toJson()).toList(),
+        'dificultad': _dificultad,
+        'tiempoPreparacion': _tiempoPreparacion,
+        'imagen': _imagen,
+        'calificacionPromedio': _calificacionPromedio,
+        'numCalificaciones': _numCalificaciones,
+        'usuarioCreador': _usuarioCreador.nombre,
+        'etiquetas': _etiquetas,
+        'elaboracion': _elaboracion,
+        'comentarios': _comentarios.map((comentario) => comentario.toJson()).toList(),
+      };
+    }
+
+  Future<void> agregarReceta(RecetaCafe receta) async {
+    try {
+      final file = File('recetas.json');
+      
+      // Leer el archivo actual de recetas
+      String fileContents = await file.readAsString();
+      
+      // Decodificar el contenido JSON
+      List<dynamic> recetasJson = json.decode(fileContents);
+      
+      // Agregar la nueva receta
+      recetasJson.add(receta.toJson());
+      
+      // Volver a escribir el archivo con la receta agregada
+      await file.writeAsString(json.encode(recetasJson), mode: FileMode.write);
+      
+      print("Receta guardada correctamente");
+    } catch (e) {
+      print("Error al guardar la receta: $e");
+    }
+  }
 }
