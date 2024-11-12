@@ -17,70 +17,51 @@ class DetalleRecetaScreen extends StatefulWidget
   _DetalleRecetaScreenState createState() => _DetalleRecetaScreenState();
 }
 
-class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> 
-{
+class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
   final DatabaseHelper dbHelper = DatabaseHelper();
   bool _esFavorita = false;
-  late Usuario creador;
-  late Equipo equipo;
+  late Future<Usuario?> creadorFuture; // Cambiado a Future<Usuario?>
+  late Future<Equipo?> equipoFuture;
 
   @override
-  void initState() 
-  {
+  void initState() {
     super.initState();
-    // Verifica si la receta ya está en la lista de favoritos
-    creador = dbHelper.obtenerUsuarioID(widget.receta.creadorId) as Usuario;
-    equipo = dbHelper.obtenerEquipoPorId(widget.receta.equipoNecesarioId) as Equipo;
+    creadorFuture = dbHelper.obtenerUsuarioID(widget.receta.creadorId);
+    equipoFuture = dbHelper.obtenerEquipoPorId(widget.receta.equipoNecesarioId);
     _esFavorita = widget.usuarioActual.esFavorita(widget.receta.id!);
   }
 
   @override
-  Widget build(BuildContext context) 
-  {
-    return Scaffold
-    (
-      appBar: AppBar
-      (
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
         backgroundColor: const Color(0xFFD9AB82),
         title: Text(widget.receta.nombreReceta),
-        actions: 
-        [
-          IconButton
-          (
-            icon: Icon
-            (
+        actions: [
+          IconButton(
+            icon: Icon(
               _esFavorita ? Icons.favorite : Icons.favorite_border,
               color: _esFavorita ? Colors.red : null,
             ),
-            onPressed: () 
-            {
-              setState(() 
-              {
-                if (_esFavorita) 
-                {
+            onPressed: () {
+              setState(() {
+                if (_esFavorita) {
                   widget.usuarioActual.eliminarFavorita(widget.receta.id!);
                   _esFavorita = false;
-                } else 
-                {
+                } else {
                   widget.usuarioActual.agregarFavorita(widget.receta.id!);
                   _esFavorita = true;
                 }
               });
             },
           ),
-          IconButton
-          (
+          IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () 
-            {
-              // Navegar a la pantalla de edición
-              Navigator.push
-              (
+            onPressed: () {
+              Navigator.push(
                 context,
-                MaterialPageRoute
-                (
-                  builder: (context) => EditarRecetaScreen
-                  (
+                MaterialPageRoute(
+                  builder: (context) => EditarRecetaScreen(
                     receta: widget.receta,
                     usuarioActual: widget.usuarioActual,
                   ),
@@ -90,16 +71,12 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
           ),
         ],
       ),
-      body: Padding
-      (
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView
-        (
-          child: Column
-          (
+        child: SingleChildScrollView(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: 
-            [
+            children: [
               // Imagen de la receta
               Image.asset(widget.receta.imagen, width: double.infinity, height: 200, fit: BoxFit.contain),
               const SizedBox(height: 20),
@@ -109,38 +86,30 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 20),
 
               // Método de preparación
-              Row
-              (
-                children: 
-                [
-                  const Text
-                  (
+              Row(
+                children: [
+                  const Text(
                     'Método de Preparación:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 5), // Espaciado entre los textos
-                  Text
-                  (
+                  const SizedBox(width: 5),
+                  Text(
                     widget.receta.metodo,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              
+
               // Dificultad
-              Row
-              (
-                children: 
-                [
-                  const Text
-                  (
+              Row(
+                children: [
+                  const Text(
                     'Dificultad:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 5), // Espaciado entre los textos
-                  Text
-                  (
+                  const SizedBox(width: 5),
+                  Text(
                     widget.receta.dificultad,
                     style: const TextStyle(fontSize: 18),
                   ),
@@ -149,23 +118,18 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 10),
 
               // Tiempo de preparación
-              Row
-              (
-                children: 
-                [
-                  const Text
-                  (
+              Row(
+                children: [
+                  const Text(
                     'Tiempo de Preparación:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 5), // Espaciado entre los textos
-                  Text
-                  (
+                  const SizedBox(width: 5),
+                  Text(
                     widget.receta.tiempoPreparacion.toString(),
                     style: const TextStyle(fontSize: 18),
                   ),
-                  const Text
-                  (
+                  const Text(
                     ' minutos',
                     style: TextStyle(fontSize: 18),
                   ),
@@ -174,22 +138,32 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 10),
 
               // Autor de la receta
-              Row
-              (
-                children: 
-                [
-                  const Text
-                  (
-                    'Autor:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(width: 5), // Espaciado entre los textos
-                  Text
-                  (
-                    creador.nombre,
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ],
+              FutureBuilder<Usuario?>(
+                future: creadorFuture,  // Usamos Future<Usuario?>
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();  // Mientras carga
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data == null) {
+                    return const Text('No se pudo cargar el creador');
+                  } else {
+                    final creador = snapshot.data!;
+                    return Row(
+                      children: [
+                        const Text(
+                          'Autor:',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          creador.nombre,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 10),
 
@@ -198,76 +172,70 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               const SizedBox(height: 2),
 
               // ListView de ingredientes
-              ListView.builder
-              (
+              ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.receta.ingredientes.length,
-                itemBuilder: (context, index) 
-                {
+                itemBuilder: (context, index) {
                   final ingrediente = widget.receta.ingredientes[index];
-                  return ListTile
-                  (
-                    title: Row
-                    (
-                      children: 
-                      [
-                        Text
-                        (
+                  return ListTile(
+                    title: Row(
+                      children: [
+                        Text(
                           '${ingrediente.nombreIngrediente}: ',
-                          style: const TextStyle
-                          (
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text
-                        (
+                        Text(
                           '${ingrediente.cantidad} ${ingrediente.unidadMedida}',
-                          style: const TextStyle
-                          (
-                            fontSize: 18,
-                          ),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
                   );
                 },
               ),
-            const SizedBox(height: 10),
-
+              const SizedBox(height: 10),
 
               // Equipo necesario
               const Text('Equipo Necesario', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              // Mostrar solo un equipo
-              Card
-              (
-                elevation: 4.0,
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ListTile
-                (
-                  title: Text('${equipo.nombreEquipo} (${equipo.tipo})'),
-                  subtitle: Text(equipo.descripcion),
-                  leading: Image.asset(equipo.imagen, width: 50, height: 50),
-                  onTap: () 
-                  {
-                    Navigator.push
-                    (
-                      context,
-                      MaterialPageRoute
-                      (
-                        builder: (context) => RecomendacionEquipoScreen
-                        (
-                          nombreEquipo: equipo.nombreEquipo,
-                          descripcion: equipo.descripcion,
-                          imagen: equipo.imagen,
-                          enlacesCompra: equipo.enlacesCompra,
-                        ),
+
+              // FutureBuilder para el equipo
+              FutureBuilder<Equipo?>(
+                future: equipoFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData) {
+                    return const Text('No se pudo cargar el equipo');
+                  } else {
+                    final equipo = snapshot.data!;
+                    return Card(
+                      elevation: 4.0,
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        title: Text('${equipo.nombreEquipo} (${equipo.tipo})'),
+                        subtitle: Text(equipo.descripcion),
+                        leading: Image.asset(equipo.imagen, width: 50, height: 50),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RecomendacionEquipoScreen(
+                                nombreEquipo: equipo.nombreEquipo,
+                                descripcion: equipo.descripcion,
+                                imagen: equipo.imagen,
+                                enlacesCompra: equipo.enlacesCompra,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     );
-                  },
-                ),
+                  }
+                },
               ),
 
               const SizedBox(height: 20),
@@ -275,38 +243,30 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               // Proceso de elaboración
               const Text('Elaboración:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
+
               // ListView numerado para los pasos de elaboración
-              ListView.builder
-              (
+              ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.receta.elaboracion.length,
-                itemBuilder: (context, index) 
-                {
-                  return Container
-                  (
+                itemBuilder: (context, index) {
+                  return Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration
-                    (
+                    decoration: BoxDecoration(
                       color: const Color(0xFFD9AB82),
                       borderRadius: BorderRadius.circular(8.0),
                       border: Border.all(color: Colors.grey),
                     ),
-                    child: Row
-                    (
-                      children: 
-                      [
-                        CircleAvatar
-                        (
+                    child: Row(
+                      children: [
+                        CircleAvatar(
                           backgroundColor: const Color(0xFFA6785D),
                           child: Text('${index + 1}', style: const TextStyle(color: Color.fromARGB(255, 255, 252, 252))),
                         ),
                         const SizedBox(width: 10),
-                        Expanded
-                        (
-                          child: Text
-                          (
+                        Expanded(
+                          child: Text(
                             widget.receta.elaboracion[index],
                             style: const TextStyle(fontSize: 16, color: Colors.white),
                           ),
