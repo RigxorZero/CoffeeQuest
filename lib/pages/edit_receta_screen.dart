@@ -1,5 +1,6 @@
 import 'package:coffee_quest/models/ingrediente.dart';
 import 'package:flutter/material.dart';
+import '../models/database_helper.dart';
 import '../models/receta_cafe.dart';
 import '../models/usuario.dart';
 import '../pages/details_receta_screen.dart';
@@ -21,6 +22,7 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
   final TextEditingController _nuevoIngredienteController = TextEditingController();
   final TextEditingController _cantidadController = TextEditingController();
   final TextEditingController _unidadMedidaController = TextEditingController();
+  final DatabaseHelper dbHelper = DatabaseHelper();
   List<String> _pasos = []; // Lista combinada de pasos
   List<Ingrediente> _ingredientes = [];
 
@@ -60,37 +62,41 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
     }
   }
 
-  void _guardarReceta() {
-    // Crea una nueva receta basada en los datos editados
-    RecetaCafe nuevaReceta = RecetaCafe(
-      nombreReceta: _nombreController.text,
-      descripcion: _descripcionController.text,
-      ingredientes: _ingredientes,
-      metodo: _metodoSeleccionado ?? widget.receta.metodo,
-      equipoNecesario: widget.receta.equipoNecesario,
-      dificultad: _dificultadSeleccionada ?? widget.receta.dificultad,
-      tiempoPreparacion: widget.receta.tiempoPreparacion,
-      imagen: widget.receta.imagen,
-      calificacionPromedio: 0.0,
-      numCalificaciones: 0,
-      usuarioCreador: widget.usuarioActual,
-      etiquetas: widget.receta.etiquetas,
-      elaboracion: _pasos, // Usa la lista completa de pasos
-    );
+  void _guardarReceta() async 
+  {
+  // Crea una nueva receta basada en los datos editados
+  RecetaCafe nuevaReceta = RecetaCafe(
+    nombreReceta: _nombreController.text,
+    descripcion: _descripcionController.text,
+    ingredientes: _ingredientes,
+    metodo: _metodoSeleccionado ?? widget.receta.metodo,
+    equipoNecesarioId: widget.receta.equipoNecesarioId,
+    dificultad: _dificultadSeleccionada ?? widget.receta.dificultad,
+    tiempoPreparacion: widget.receta.tiempoPreparacion,
+    creadorId: widget.usuarioActual.id!,
+    vecesPreparada: 0,
+    imagen: widget.receta.imagen,
+    elaboracion: _pasos, // Usa la lista completa de pasos
+  );
 
-    widget.usuarioActual.agregarFavorita(nuevaReceta);
-    widget.receta.toJson();
-    
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DetalleRecetaScreen(
-          receta: nuevaReceta,
-          usuarioActual: widget.usuarioActual,
-        ),
+  // Guardar receta en la base de datos
+  DatabaseHelper helper = DatabaseHelper();
+  await helper.insertReceta(nuevaReceta);
+
+  // Agregar receta a la lista de favoritas del usuario
+  widget.usuarioActual.agregarFavorita(nuevaReceta.id!);
+  
+  // Navegar a la pantalla de detalles
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DetalleRecetaScreen(
+        receta: nuevaReceta,
+        usuarioActual: widget.usuarioActual,
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _agregarIngrediente() {
     if (_nuevoIngredienteController.text.isNotEmpty &&

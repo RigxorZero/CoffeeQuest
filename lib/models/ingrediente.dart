@@ -1,45 +1,40 @@
-class Ingrediente {
-  // Atributos privados
-  String _nombreIngrediente;
-  String _cantidad;
-  String _unidadMedida;
+class Ingrediente 
+{
+  final int? id;
+  final String nombreIngrediente;
+  final String cantidad;
+  final String unidadMedida;
 
   // Constructor
-  Ingrediente({
-    required String nombreIngrediente,
-    required String cantidad,
-    required String unidadMedida,
-  })  : _nombreIngrediente = nombreIngrediente,
-        _cantidad = cantidad,
-        _unidadMedida = unidadMedida;
+  Ingrediente
+  ({
+    this.id,
+    required this.nombreIngrediente,
+    required this.cantidad,
+    required this.unidadMedida,
+  });
 
-  // Métodos
-  factory Ingrediente.fromJson(Map<String, dynamic> json) {
-    return Ingrediente(
-      nombreIngrediente: json['nombreIngrediente'],
-      cantidad: json['cantidad'],
-      unidadMedida: json['unidadMedida'],
-    );
-  }
-
-  // Método toJson para convertir un objeto Ingrediente en Map
-  Map<String, dynamic> toJson() {
-    return {
-      'nombreIngrediente': _nombreIngrediente,
-      'cantidad': _cantidad,
-      'unidadMedida': _unidadMedida,
+  // Convertir el objeto Ingrediente a un Map para almacenarlo en la base de datos
+  Map<String, dynamic> toMap() 
+  {
+    return 
+    {
+      'id': id,
+      'nombreIngrediente': nombreIngrediente,
+      'cantidad': cantidad,
+      'unidadMedida': unidadMedida,
     };
   }
 
-  void detalleIngrediente() {
-    print("$_nombreIngrediente: $_cantidad $_unidadMedida");
+  // Crear un objeto Ingrediente a partir de un Map (extraído de la base de datos)
+  factory Ingrediente.fromMap(Map<String, dynamic> map) 
+  {
+    return Ingrediente
+    (
+      id: map['id'],
+      nombreIngrediente: map['nombreIngrediente'],
+      cantidad: map['cantidad'],
+      unidadMedida: map['unidadMedida'],
+    );
   }
-
-  // Getters para acceder a los atributos privados
-  String get nombreIngrediente => _nombreIngrediente;
-  String get cantidad => _cantidad;
-  String get unidadMedida => _unidadMedida;
-
-  // Setter
-  set cantidad(String cantidad) => _cantidad = cantidad;
 }

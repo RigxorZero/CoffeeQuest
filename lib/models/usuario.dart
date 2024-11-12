@@ -1,71 +1,86 @@
-import 'receta_cafe.dart';
-
-class Usuario {
-  // Atributos privados
+class Usuario 
+{
+  int? id; // ID único para la base de datos
   String _nombre;
   String _email;
   String _metodoFavorito;
   String _tipoGranoFavorito;
   String _nivelMolienda;
-  List<RecetaCafe> _recetasFavoritas;
+  List<int> recetasFavoritas; // Lista de IDs de las recetas favoritas
 
-  // Constructor
-  Usuario({
+  Usuario
+  ({
+    this.id,
     required String nombre,
     required String email,
     required String metodoFavorito,
     required String tipoGranoFavorito,
     required String nivelMolienda,
-    List<RecetaCafe>? recetasFavoritas, // opcional
+    this.recetasFavoritas = const [], // Inicializar con una lista vacía
   })  : _nombre = nombre,
         _email = email,
         _metodoFavorito = metodoFavorito,
         _tipoGranoFavorito = tipoGranoFavorito,
-        _nivelMolienda = nivelMolienda,
-        _recetasFavoritas = recetasFavoritas ?? [];
+        _nivelMolienda = nivelMolienda;
 
-  // Métodos
-
-  void agregarFavorita(RecetaCafe receta) {
-    if (!esFavorita(receta)) {
-      _recetasFavoritas.add(receta);
-    }
-  }
-
-  void eliminarFavorita(RecetaCafe receta) {
-    _recetasFavoritas.remove(receta);
-  }
-
-  bool esFavorita(RecetaCafe receta) {
-    return _recetasFavoritas.contains(receta);
-  }
-
-  void verFavoritas() {
-    for (var receta in _recetasFavoritas) {
-      print(receta.nombreReceta);
-    }
-  }
-
-  void ordenarFavoritas() {
-    _recetasFavoritas.sort((a, b) => a.nombreReceta.compareTo(b.nombreReceta));
-  }
-
-  void actualizarPreferencias(String metodo, String grano, String molienda) {
-    _metodoFavorito = metodo;
-    _tipoGranoFavorito = grano;
-    _nivelMolienda = molienda;
-  }
-
-  // Método toJson para convertir un objeto Usuario en Map
-  Map<String, dynamic> toJson() {
-    return {
+  // Convertir el Usuario a un Map para la base de datos
+  Map<String, dynamic> toMap() 
+  {
+    return 
+    {
+      'id': id,
       'nombre': _nombre,
       'email': _email,
       'metodoFavorito': _metodoFavorito,
       'tipoGranoFavorito': _tipoGranoFavorito,
       'nivelMolienda': _nivelMolienda,
-      'recetasFavoritas': _recetasFavoritas.map((receta) => receta.toJson()).toList(), // Convertir las recetas a JSON
+      'recetasFavoritas': recetasFavoritas.join(','), // Convertir lista a string
     };
+  }
+
+  // Crear un Usuario a partir de un Map
+  factory Usuario.fromMap(Map<String, dynamic> map) 
+  {
+    return Usuario
+    (
+      id: map['id'],
+      nombre: map['nombre'],
+      email: map['email'],
+      metodoFavorito: map['metodoFavorito'],
+      tipoGranoFavorito: map['tipoGranoFavorito'],
+      nivelMolienda: map['nivelMolienda'],
+      recetasFavoritas: map['recetasFavoritas'] != null
+          ? List<int>.from(map['recetasFavoritas'].split(',').map((e) => int.parse(e)))
+          : [],
+    );
+  }
+
+  // Agregar una receta favorita
+  void agregarFavorita(int recetaId) 
+  {
+    if (!recetasFavoritas.contains(recetaId)) 
+    {
+      recetasFavoritas.add(recetaId);
+    }
+  }
+
+  // Eliminar una receta favorita
+  void eliminarFavorita(int recetaId) 
+  {
+    recetasFavoritas.remove(recetaId);
+  }
+
+  bool esFavorita(int recetaId) 
+  {
+    return recetasFavoritas.contains(recetaId);
+  }
+
+  // Método para actualizar las preferencias del usuario
+  void actualizarPreferencias(String metodo, String grano, String molienda) 
+  {
+    _metodoFavorito = metodo;
+    _tipoGranoFavorito = grano;
+    _nivelMolienda = molienda;
   }
 
   // Getters para acceder a los atributos privados
@@ -74,5 +89,4 @@ class Usuario {
   String get metodoFavorito => _metodoFavorito;
   String get tipoGranoFavorito => _tipoGranoFavorito;
   String get nivelMolienda => _nivelMolienda;
-  List<RecetaCafe> get recetasFavoritas => List.unmodifiable(_recetasFavoritas); // Retorna una copia inmutable
 }

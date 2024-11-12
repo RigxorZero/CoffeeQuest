@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../models/database_helper.dart';
+import '../models/equipo.dart';
 import '../models/receta_cafe.dart';
-import '../models/comentarios.dart';
 import '../models/usuario.dart';
 import 'edit_receta_screen.dart';
 import 'recommendation_screen.dart';
@@ -18,16 +19,19 @@ class DetalleRecetaScreen extends StatefulWidget
 
 class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> 
 {
-  final TextEditingController _comentarioController = TextEditingController();
-  int? _calificacionSeleccionada;
+  final DatabaseHelper dbHelper = DatabaseHelper();
   bool _esFavorita = false;
+  late Usuario creador;
+  late Equipo equipo;
 
   @override
   void initState() 
   {
     super.initState();
     // Verifica si la receta ya está en la lista de favoritos
-    _esFavorita = widget.usuarioActual.esFavorita(widget.receta);
+    creador = dbHelper.obtenerUsuarioID(widget.receta.creadorId) as Usuario;
+    equipo = dbHelper.obtenerEquipoPorId(widget.receta.equipoNecesarioId) as Equipo;
+    _esFavorita = widget.usuarioActual.esFavorita(widget.receta.id!);
   }
 
   @override
@@ -54,11 +58,11 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               {
                 if (_esFavorita) 
                 {
-                  widget.usuarioActual.eliminarFavorita(widget.receta);
+                  widget.usuarioActual.eliminarFavorita(widget.receta.id!);
                   _esFavorita = false;
                 } else 
                 {
-                  widget.usuarioActual.agregarFavorita(widget.receta);
+                  widget.usuarioActual.agregarFavorita(widget.receta.id!);
                   _esFavorita = true;
                 }
               });
@@ -182,7 +186,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
                   const SizedBox(width: 5), // Espaciado entre los textos
                   Text
                   (
-                    widget.receta.usuarioCreador.nombre,
+                    creador.nombre,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -236,45 +240,36 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
               // Equipo necesario
               const Text('Equipo Necesario', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              // ListView de equipos
-              ListView.builder
+              // Mostrar solo un equipo
+              Card
               (
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.receta.equipoNecesario.length,
-                itemBuilder: (context, index) 
-                {
-                  final equipo = widget.receta.equipoNecesario[index];
-                  return Card
-                  (
-                    elevation: 4.0,
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile
+                elevation: 4.0,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile
+                (
+                  title: Text('${equipo.nombreEquipo} (${equipo.tipo})'),
+                  subtitle: Text(equipo.descripcion),
+                  leading: Image.asset(equipo.imagen, width: 50, height: 50),
+                  onTap: () 
+                  {
+                    Navigator.push
                     (
-                      title: Text('${equipo.nombreEquipo} (${equipo.tipo})'),
-                      subtitle: Text(equipo.descripcion),
-                      leading: Image.asset(equipo.imagen, width: 50, height: 50),
-                      onTap: () 
-                      {
-                        Navigator.push
+                      context,
+                      MaterialPageRoute
+                      (
+                        builder: (context) => RecomendacionEquipoScreen
                         (
-                          context,
-                          MaterialPageRoute
-                          (
-                            builder: (context) => RecomendacionEquipoScreen
-                            (
-                              nombreEquipo: equipo.nombreEquipo,
-                              descripcion: equipo.descripcion,
-                              imagen: equipo.imagen,
-                              enlacesCompra: equipo.enlacesCompra,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                          nombreEquipo: equipo.nombreEquipo,
+                          descripcion: equipo.descripcion,
+                          imagen: equipo.imagen,
+                          enlacesCompra: equipo.enlacesCompra,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
+
               const SizedBox(height: 20),
 
               // Proceso de elaboración
@@ -322,105 +317,6 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen>
                 },
               ),
               const SizedBox(height: 20),
-
-              // Calificación promedio y número de calificaciones
-              Text('Calificación Promedio: ${widget.receta.calificacionPromedio.toStringAsFixed(1)}', style: const TextStyle(fontSize: 18)),
-              Text('Número de Calificaciones: ${widget.receta.numCalificaciones}', style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 20),
-
-              // Sección para agregar calificación y comentario
-              const Text('Calificación y Comentario', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              DropdownButton<int>(
-                hint: const Text('Selecciona una calificación'),
-                value: _calificacionSeleccionada,
-                items: List.generate(5, (index) => index + 1).map((int valor) 
-                {
-                  return DropdownMenuItem<int>
-                  (
-                    value: valor,
-                    child: Text(valor.toString()),
-                  );
-                }).toList(),
-                onChanged: (int? nuevoValor) 
-                {
-                  setState(() 
-                  {
-                    _calificacionSeleccionada = nuevoValor;
-                  });
-                },
-              ),
-              const SizedBox(height: 10),
-              TextField
-              (
-                controller: _comentarioController,
-                decoration: const InputDecoration
-                (
-                  labelText: 'Comentario',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton
-              (
-                style: ElevatedButton.styleFrom
-                (
-                  backgroundColor: const Color(0xFFD9AB82),
-                ),
-                onPressed: () 
-                {
-                  if (_calificacionSeleccionada != null && _comentarioController.text.isNotEmpty) 
-                  {
-                    Comentarios nuevoComentario = Comentarios
-                    (
-                      contenido: _comentarioController.text,
-                      calificacion: _calificacionSeleccionada!,
-                      creador: widget.usuarioActual,
-                    );
-
-                    // Agregar el comentario a la receta
-                    widget.receta.agregarComentario(nuevoComentario.contenido, nuevoComentario.calificacion, widget.usuarioActual);
-                    ScaffoldMessenger.of(context).showSnackBar
-                    (
-                      const SnackBar(content: Text('Comentario agregado')),
-                    );
-
-                    // Limpiar los campos
-                    _comentarioController.clear();
-                    setState(() 
-                    {
-                      _calificacionSeleccionada = null; // Resetear la calificación
-                    });
-                  } else 
-                  {
-                    ScaffoldMessenger.of(context).showSnackBar
-                    (
-                      const SnackBar(content: Text('Por favor, completa la calificación y el comentario')),
-                    );
-                  }
-                },
-                child: const Text('Agregar Comentario'),
-              ),
-              const SizedBox(height: 20),
-
-              // Listado de comentarios
-              const Text('Comentarios:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              ListView.builder
-              (
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.receta.comentarios.length,
-                itemBuilder: (context, index) 
-                {
-                  final comentario = widget.receta.comentarios[index];
-                  return ListTile
-                  (
-                    title: Text(comentario.contenido),
-                    subtitle: Text('Calificación: ${comentario.calificacion} \nFecha: ${comentario.fecha.toLocal()} \nAutor: ${comentario.creador.nombre}'),
-                  );
-                },
-              ),
             ],
           ),
         ),

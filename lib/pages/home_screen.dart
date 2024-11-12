@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert'; // Para manejar JSON
 import '../models/receta_cafe.dart';
 import '../models/usuario.dart';
 import '../models/ingrediente.dart';
 import '../models/equipo.dart';
 import 'details_receta_screen.dart';
+import '../models/database_helper.dart';
 
 class MyHomePage extends StatefulWidget 
 {
-  const MyHomePage({super.key, required this.title, required this.usuario});
+  MyHomePage({super.key, required this.title, required this.usuario});
 
-  final String title;
-  final Usuario usuario;
+  String title;
+  Usuario usuario;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -39,45 +38,34 @@ class _MyHomePageState extends State<MyHomePage>
     await _loadRecetas();
   }
 
+  // Cargar ingredientes desde la base de datos
   Future<void> _loadIngredientes() async 
   {
-    final String response = await rootBundle.loadString('assets/ingredientes.json');
-    final List<dynamic> data = json.decode(response);
-    setState(() 
-    {
-      _ingredientes = data.map((item) => Ingrediente.fromJson(item)).toList();
+    // Obtener ingredientes desde la base de datos
+    var ingredientes = await DatabaseHelper().obtenerIngredientes();
+    setState(() {
+      _ingredientes = ingredientes;
     });
   }
 
+  // Cargar equipos desde la base de datos
   Future<void> _loadEquipos() async 
   {
-    final String response = await rootBundle.loadString('assets/equipos.json');
-    final List<dynamic> data = json.decode(response);
-    setState(() 
-    {
-      _equipos = data.map((item) => Equipo.fromJson(item)).toList();
+    // Obtener equipos desde la base de datos
+    var equipos = await DatabaseHelper().obtenerEquipos();
+    setState(() {
+      _equipos = equipos;
     });
   }
 
+  // Cargar recetas desde la base de datos
   Future<void> _loadRecetas() async 
   {
-    final String response = await rootBundle.loadString('assets/recetas.json');
-    final List<dynamic> data = json.decode(response);
-
-    // Crear una instancia de Usuario para "CoffeeQuest"
-    Usuario creador = Usuario
-    (
-      nombre: 'CoffeeQuest',
-      email: 'coffeequest@app.com',
-      metodoFavorito: 'Espresso',
-      tipoGranoFavorito: 'Arábica',
-      nivelMolienda: 'Medio',
-      recetasFavoritas: [],
-    );
-
+    // Obtener recetas desde la base de datos
+    var recetas = await DatabaseHelper().obtenerRecetas();
     setState(() 
     {
-      _recetas = data.map((item) => RecetaCafe.fromJson(item, creador, _ingredientes, _equipos)).toList();
+      _recetas = recetas;
     });
   }
 
@@ -86,10 +74,6 @@ class _MyHomePageState extends State<MyHomePage>
   {
     return Scaffold
     (
-      appBar: AppBar
-      (
-        title: Text(widget.title),
-      ),
       body: ListView.builder
       (
         itemCount: _recetas.length,

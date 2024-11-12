@@ -1,50 +1,47 @@
-class Equipo {
-  // Atributos
-  String _nombreEquipo;
-  String _tipo;
-  String _descripcion;
-  String _imagen;
-  List<String> _enlacesCompra;
+class Equipo 
+{
+  final int? id;
+  final String nombreEquipo;
+  final String tipo;
+  final String descripcion;
+  final String imagen;
+  final List<String> enlacesCompra;
 
-  // Constructor
-  Equipo({
-    required String nombreEquipo,
-    required String tipo,
-    required String descripcion,
-    required String imagen,
-    required List<String> enlacesCompra,
-  })  : _nombreEquipo = nombreEquipo,
-        _tipo = tipo,
-        _descripcion = descripcion,
-        _imagen = imagen,
-        _enlacesCompra = enlacesCompra;
+  Equipo
+  ({
+    this.id,
+    required this.nombreEquipo,
+    required this.tipo,
+    required this.descripcion,
+    required this.imagen,
+    required this.enlacesCompra,
+  });
 
-  // Método
-  factory Equipo.fromJson(Map<String, dynamic> json) {
-    return Equipo(
-      nombreEquipo: json['nombreEquipo'],
-      tipo: json['tipo'],
-      descripcion: json['descripcion'],
-      imagen: json['imagen'],
-      enlacesCompra: List<String>.from(json['enlacesCompra'] ?? []),
-    );
-  }
-
-  // Método toJson para convertir un objeto Equipo en Map
-  Map<String, dynamic> toJson() {
-    return {
-      'nombreEquipo': _nombreEquipo,
-      'tipo': _tipo,
-      'descripcion': _descripcion,
-      'imagen': _imagen,
-      'enlacesCompra': _enlacesCompra,
+  // Convertir el objeto Equipo a un Map para almacenarlo en la base de datos
+  Map<String, dynamic> toMap() 
+  {
+    return 
+    {
+      'id': id,
+      'nombreEquipo': nombreEquipo,
+      'tipo': tipo,
+      'descripcion': descripcion,
+      'imagen': imagen,
+      'enlacesCompra': enlacesCompra.join(','),  // Convertir la lista a una cadena
     };
   }
 
-  // Getters para acceder a los atributos privados
-  String get nombreEquipo => _nombreEquipo;
-  String get tipo => _tipo;
-  String get descripcion => _descripcion;
-  String get imagen => _imagen;
-  List<String> get enlacesCompra => _enlacesCompra;
+  // Crear un objeto Equipo a partir de un Map (extraído de la base de datos)
+  factory Equipo.fromMap(Map<String, dynamic> map) 
+  {
+    return Equipo
+    (
+      id: map['id'],
+      nombreEquipo: map['nombreEquipo'],
+      tipo: map['tipo'],
+      descripcion: map['descripcion'],
+      imagen: map['imagen'],
+      enlacesCompra: map['enlacesCompra'].split(',').toList(), // Convertir la cadena a lista
+    );
+  }
 }

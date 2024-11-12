@@ -1,93 +1,20 @@
 [
-    {
-      "nombreIngrediente": "Café Molido",
-      "unidadMedida": "cucharadas",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Agua",
-      "unidadMedida": "ml",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Leche",
-      "unidadMedida": "ml",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Azúcar",
-      "unidadMedida": "cucharada",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Sirope de Vainilla",
-      "unidadMedida": "cucharada",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Canela",
-      "unidadMedida": "pizca",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Hielo",
-      "unidadMedida": "cubos",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Café Instantáneo",
-      "unidadMedida": "cucharadas",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Cacao en Polvo",
-      "unidadMedida": "cucharadas",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Nuez Moscada",
-      "unidadMedida": "pizca",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Miel",
-      "unidadMedida": "cucharada",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Extracto de Almendra",
-      "unidadMedida": "cucharadas",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Leche Condensada",
-      "unidadMedida": "ml",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Sirope de Caramelo",
-      "unidadMedida": "cucharadas",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Crema Batida",
-      "unidadMedida": "ml",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Leche de Coco",
-      "unidadMedida": "ml",
-      "cantidad": "0"
-    },
-    {
-      "nombreIngrediente": "Leche de Avena",
-      "unidadMedida": "ml",
-      "cantidad": "0"
-    },
-    {
-        "nombreIngrediente": "Whisky irlandés",
-        "unidadMedida": "ml",
-        "cantidad": "0"
-    }
-  ]
-  
+  { "idIngrediente": 1, "nombreIngrediente": "Café Molido", "unidadMedida": "cucharadas", "cantidad": "0" },
+  { "idIngrediente": 2, "nombreIngrediente": "Agua", "unidadMedida": "ml", "cantidad": "0" },
+  { "idIngrediente": 3, "nombreIngrediente": "Leche", "unidadMedida": "ml", "cantidad": "0" },
+  { "idIngrediente": 4, "nombreIngrediente": "Azúcar", "unidadMedida": "cucharada", "cantidad": "0" },
+  { "idIngrediente": 5, "nombreIngrediente": "Sirope de Vainilla", "unidadMedida": "cucharada", "cantidad": "0" },
+  { "idIngrediente": 6, "nombreIngrediente": "Canela", "unidadMedida": "pizca", "cantidad": "0" },
+  { "idIngrediente": 7, "nombreIngrediente": "Hielo", "unidadMedida": "cubos", "cantidad": "0" },
+  { "idIngrediente": 8, "nombreIngrediente": "Café Instantáneo", "unidadMedida": "cucharadas", "cantidad": "0" },
+  { "idIngrediente": 9, "nombreIngrediente": "Cacao en Polvo", "unidadMedida": "cucharadas", "cantidad": "0" },
+  { "idIngrediente": 10, "nombreIngrediente": "Nuez Moscada", "unidadMedida": "pizca", "cantidad": "0" },
+  { "idIngrediente": 11, "nombreIngrediente": "Miel", "unidadMedida": "cucharada", "cantidad": "0" },
+  { "idIngrediente": 12, "nombreIngrediente": "Extracto de Almendra", "unidadMedida": "cucharadas", "cantidad": "0" },
+  { "idIngrediente": 13, "nombreIngrediente": "Leche Condensada", "unidadMedida": "ml", "cantidad": "0" },
+  { "idIngrediente": 14, "nombreIngrediente": "Sirope de Caramelo", "unidadMedida": "cucharadas", "cantidad": "0" },
+  { "idIngrediente": 15, "nombreIngrediente": "Crema Batida", "unidadMedida": "ml", "cantidad": "0" },
+  { "idIngrediente": 16, "nombreIngrediente": "Leche de Coco", "unidadMedida": "ml", "cantidad": "0" },
+  { "idIngrediente": 17, "nombreIngrediente": "Leche de Avena", "unidadMedida": "ml", "cantidad": "0" },
+  { "idIngrediente": 18, "nombreIngrediente": "Whisky irlandés", "unidadMedida": "ml", "cantidad": "0" }
+]
