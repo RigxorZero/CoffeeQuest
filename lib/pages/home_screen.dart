@@ -59,15 +59,23 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   // Cargar recetas desde la base de datos
-  Future<void> _loadRecetas() async 
-  {
+  Future<void> _loadRecetas() async {
     // Obtener recetas desde la base de datos
     var recetas = await DatabaseHelper().obtenerRecetas();
-    setState(() 
-    {
-      _recetas = recetas;
+    
+    var usuarios = await DatabaseHelper().obtenerUsuarios();
+    
+    var idCoffeQuest = usuarios.firstWhere((usuario) => usuario.nombre == "CoffeeQuest").id;
+
+    // Filtrar las recetas que tienen "CoffeQuest" como creador
+    var recetasFiltradas = recetas.where((receta) => receta.creadorId == idCoffeQuest).toList();
+    
+    setState(() {
+      _recetas = recetasFiltradas;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) 

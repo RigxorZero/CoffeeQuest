@@ -2,9 +2,10 @@ import 'package:coffee_quest/models/receta_cafe.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/usuario.dart';
-import '../models/receta_cafe.dart';
 import 'details_receta_screen.dart';
 import '../models/database_helper.dart';
+import 'package:coffee_quest/pages/opinion_screen.dart'; // Asegúrate de que la ruta sea correcta
+
 
 class ProfileScreen extends StatefulWidget {
   final Usuario usuario;
@@ -25,26 +26,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String _metodoSeleccionado = 'Desconocido';
   late String _tipoGranoSeleccionado = 'Desconocido';
   late String _nivelMoliendaSeleccionado = 'Desconocido';
+  late Future<List<RecetaCafe>> _futureRecetasFavoritas;
 
   @override
   void initState() {
     super.initState();
     nombre = widget.usuario.nombre;
     usuarioActual = widget.usuario;
-    _loadPreferences(); // Cargar las preferencias guardadas al iniciar
+    _loadPreferences();
+    _futureRecetasFavoritas = _loadRecetasFavoritas();
   }
 
   // Carga de preferencias guardadas
   Future<void> _loadPreferences() async {
-    // Cargar preferencias desde la base de datos
-    Usuario? usuarioDB = await dbHelper.obtenerUsuario(nombre);
-    if (usuarioDB != null) {
-      setState(() {
-        _metodoSeleccionado = usuarioDB.metodoFavorito;
-        _tipoGranoSeleccionado = usuarioDB.tipoGranoFavorito;
-        _nivelMoliendaSeleccionado = usuarioDB.nivelMolienda;
-      });
-    }
+
+    setState(() {
+      _metodoSeleccionado = usuarioActual.metodoFavorito;
+      _tipoGranoSeleccionado = usuarioActual.tipoGranoFavorito;
+      _nivelMoliendaSeleccionado = usuarioActual.nivelMolienda;
+    });
   }
 
   Future<List<RecetaCafe>> _loadRecetasFavoritas() async {
@@ -64,13 +64,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Guardar las preferencias seleccionadas
   Future<void> _savePreferences() async {
     // Guardar preferencias en SharedPreferences
+    Usuario? usuarioDB = await dbHelper.obtenerUsuario(nombre);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('metodoSeleccionado', _metodoSeleccionado);
     await prefs.setString('tipoGranoSeleccionado', _tipoGranoSeleccionado);
     await prefs.setString('nivelMoliendaSeleccionado', _nivelMoliendaSeleccionado);
 
     // Guardar las preferencias en la base de datos
-    widget.usuario.actualizarPreferencias(
+    usuarioDB?.actualizarPreferencias(
       _metodoSeleccionado,
       _tipoGranoSeleccionado,
       _nivelMoliendaSeleccionado,
@@ -123,10 +124,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
+            ElevatedButton(
+              onPressed: () {
+                // Navegar a la pantalla de retroalimentación
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OpinionScreen(), // Asegúrate de pasar los parámetros si es necesario
+                  ),
+                );
+              },
+              child: const Text('Dar Opinión'),
+            ),
+
             const SizedBox(height: 10),
             const Text('Preferencias de Café', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
-            // Dropdown para Método de Preparación
             const Text('Método de Preparación:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             DropdownButton<String>(
               value: _metodoSeleccionado,
@@ -185,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Usamos FutureBuilder para cargar las recetas favoritas
             Expanded(
               child: FutureBuilder<List<RecetaCafe>>(
-                future: _loadRecetasFavoritas(),
+                future: _futureRecetasFavoritas,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

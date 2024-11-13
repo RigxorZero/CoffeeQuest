@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:coffee_quest/models/ingrediente.dart';
 
 class RecetaCafe {
@@ -14,6 +16,7 @@ class RecetaCafe {
   int _creadorId;
   int _vecesPreparada;
   List<String> _elaboracion;
+  DateTime _fechaCreacion;
 
   // Constructor
   RecetaCafe({
@@ -29,6 +32,7 @@ class RecetaCafe {
     required int creadorId,
     required int vecesPreparada,
     required List<String> elaboracion,
+    required DateTime fechaCreacion,
   })  : _nombreReceta = nombreReceta,
         _descripcion = descripcion,
         _ingredientes = ingredientes,
@@ -39,7 +43,8 @@ class RecetaCafe {
         _imagen = imagen,
         _creadorId = creadorId,
         _vecesPreparada = vecesPreparada,
-        _elaboracion = elaboracion;
+        _elaboracion = elaboracion,
+        _fechaCreacion = fechaCreacion;
 
   // Método para convertir la receta en un mapa (para almacenamiento en base de datos)
   Map<String, dynamic> toMap() {
@@ -55,16 +60,22 @@ class RecetaCafe {
       'vecesPreparada': _vecesPreparada,
       'creadorId': _creadorId,
       'elaboracion': _elaboracion.join(';'), // Guardamos las listas como strings
+      'fechaCreacion': _fechaCreacion.toIso8601String(),
     };
   }
 
-  // Método para crear un objeto RecetaCafe a partir de un mapa (extraído de la base de datos)
-  factory RecetaCafe.fromMap(Map<String, dynamic> map) {
+  factory RecetaCafe.fromMap(Map<String, dynamic> map) 
+  {
+    // Deserializar la cadena JSON en una lista de strings
+    List<String> elaboracionList = map['elaboracion'] != null && map['elaboracion'].isNotEmpty
+        ? List<String>.from(jsonDecode(map['elaboracion']))
+        : [];
+
     return RecetaCafe(
       id: map['id'],
       nombreReceta: map['nombreReceta'],
       descripcion: map['descripcion'],
-      ingredientes: [], // Aquí manejarías los ingredientes de forma adecuada
+      ingredientes: [],
       metodo: map['metodo'],
       equipoNecesarioId: map['equipoNecesario'], // Solo el ID
       dificultad: map['dificultad'],
@@ -72,7 +83,8 @@ class RecetaCafe {
       imagen: map['imagen'],
       creadorId: map['creadorId'],
       vecesPreparada: map['vecesPreparada'],
-      elaboracion: map['elaboracion'].split(';'),
+      elaboracion: elaboracionList,
+      fechaCreacion: DateTime.parse(map['fechaCreacion']),
     );
   }
 
@@ -88,4 +100,9 @@ class RecetaCafe {
   int get vecesPreparada => _vecesPreparada;
   int get creadorId => _creadorId;
   List<String> get elaboracion => _elaboracion;
+  DateTime get fechaCreacion => _fechaCreacion;
+
+  set vecesPreparada(int veces) {
+    _vecesPreparada = veces;
+  }
 }

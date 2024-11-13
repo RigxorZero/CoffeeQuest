@@ -1,3 +1,4 @@
+import 'package:coffee_quest/pages/recetas_screen.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
@@ -40,13 +41,13 @@ class TabBarController extends StatelessWidget {
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Mis Recetas'),
-              Tab(text: 'Recetas de la comunidad'),
+              Tab(text: 'Barista'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            MyHomePage(title: 'Inicio', usuario: usuario),
+            RecetasScreen(title: 'Inicio', usuario: usuario),
             MyHomePage(title: 'Inicio', usuario: usuario),
           ],
         ),

@@ -1,14 +1,14 @@
 class Ingrediente 
 {
-  final int? id;
+  final int? ingredienteId;
   final String nombreIngrediente;
-  final String cantidad;
+  String? cantidad;
   final String unidadMedida;
 
   // Constructor
   Ingrediente
   ({
-    this.id,
+    this.ingredienteId,
     required this.nombreIngrediente,
     required this.cantidad,
     required this.unidadMedida,
@@ -19,9 +19,8 @@ class Ingrediente
   {
     return 
     {
-      'id': id,
+      'ingredienteId': ingredienteId,
       'nombreIngrediente': nombreIngrediente,
-      'cantidad': cantidad,
       'unidadMedida': unidadMedida,
     };
   }
@@ -31,7 +30,7 @@ class Ingrediente
   {
     return Ingrediente
     (
-      id: map['id'],
+      ingredienteId: map['ingredienteId'],
       nombreIngrediente: map['nombreIngrediente'],
       cantidad: map['cantidad'],
       unidadMedida: map['unidadMedida'],

@@ -3,8 +3,8 @@
     "nombreReceta": "Café Latte",
     "descripcion": "Una receta clásica de café con leche.",
     "ingredientes": [
-      { "idIngrediente": 1, "cantidad": "2" },
-      { "idIngrediente": 3, "cantidad": "250" }
+      { "ingredienteId": 1, "cantidad": "2" },
+      { "ingredienteId": 3, "cantidad": "250" }
     ],
     "metodo": "Cafetera Espresso",
     "equipoNecesario": [
@@ -26,9 +26,9 @@
     "nombreReceta": "Café Mocha",
     "descripcion": "Un delicioso café con chocolate y leche.",
     "ingredientes": [
-      { "idIngrediente": 1, "cantidad": "2" },
-      { "idIngrediente": 3, "cantidad": "250" },
-      { "idIngrediente": 9, "cantidad": "1" }
+      { "ingredienteId": 1, "cantidad": "2" },
+      { "ingredienteId": 3, "cantidad": "250" },
+      { "ingredienteId": 9, "cantidad": "1" }
     ],
     "metodo": "Cafetera Espresso",
     "equipoNecesario": [
@@ -50,8 +50,8 @@
     "nombreReceta": "Café Americano",
     "descripcion": "Un café suave diluido en agua caliente.",
     "ingredientes": [
-      { "idIngrediente": 1, "cantidad": "2" },
-      { "idIngrediente": 2, "cantidad": "200" }
+      { "ingredienteId": 1, "cantidad": "2" },
+      { "ingredienteId": 2, "cantidad": "200" }
     ],
     "metodo": "Cafetera Espresso",
     "equipoNecesario": [
@@ -67,5 +67,31 @@
       "Añade agua caliente al espresso para diluirlo.",
       "Sirve de inmediato y disfruta."
     ]
-  }
+  },
+  {
+    "nombreReceta": "Café Capuchino",
+    "descripcion": "Un café con leche espumada y una capa de espuma cremosa de leche.",
+    "ingredientes": [
+      { "ingredienteId": 1, "cantidad": "2" },
+      { "ingredienteId": 3, "cantidad": "120" },
+      { "ingredienteId": 2, "cantidad": "80" }
+    ],
+    "metodo": "Cafetera Espresso",
+    "equipoNecesario": [
+      { "idEquipo": 1 }
+    ],
+    "dificultad": "Media",
+    "tiempoPreparacion": 7,
+    "imagen": "assets/images/cafe_capuchino.png",
+    "vecesPreparada": 0,
+    "elaboracion": [
+      "Coloca el café molido en el portafiltro de la cafetera espresso.",
+      "Compacta el café y prepara un shot de espresso.",
+      "Mientras se prepara el espresso, calienta la leche a fuego lento y bátela vigorosamente para formar una espuma densa.",
+      "Vierte el espresso en una taza y añade la leche caliente con una pequeña cantidad de espuma.",
+      "Añade una capa espesa de espuma de leche sobre el café, creando una capa cremosa.",
+      "Decora con cacao en polvo o canela si lo prefieres.",
+      "Sirve de inmediato y disfruta."
+    ]
+  }  
 ]

@@ -25,17 +25,11 @@ void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //await eliminarBaseDeDatos();
+  await eliminarBaseDeDatos();
 
   // Inicializa la base de datos
   var dbHelper = DatabaseHelper();
   var db = await dbHelper.database;
-
-  // Verifica las tablas de la base de datos
-  await verificarTablasExistentes(db);
-
-  // Verifica las recetas de la base de datos
-  await verificarRecetasExistentes(dbHelper);
 
   runApp(const MyApp());
 
@@ -48,6 +42,8 @@ void main() async
     nivelMolienda: 'Medio',
     recetasFavoritas: [1],
   );
+
+  verificarRecetasExistentes(dbHelper);
 
   bool usuarioExistente = await verificarUsuarioExistente(dbHelper);
   if (!usuarioExistente) 
@@ -70,6 +66,23 @@ Future<void> verificarTablasExistentes(Database db) async
     logger.i("No hay tablas en la base de datos.");
   }
 }
+
+// Ejemplo de uso de la función para verificar los registros de receta_ingredientes con Logger
+void verificarRecetaIngredientes() async {
+  var logger = Logger();
+  var dbHelper = DatabaseHelper();
+  var ingredientes = await dbHelper.obtenerTodosRecetaIngredientes();
+  
+  // Mostrar los resultados usando el logger
+  if (ingredientes.isNotEmpty) {
+    for (var ingrediente in ingredientes) {
+      logger.i('RecetaId: ${ingrediente['recetaId']}, IngredienteId: ${ingrediente['ingredienteId']}');
+    }
+  } else {
+    logger.i("No hay registros en la tabla receta_ingredientes.");
+  }
+}
+
 
 
 Future<void> verificarRecetasExistentes(DatabaseHelper dbHelper) async {
@@ -129,8 +142,9 @@ Future<void> verificarRecetasExistentes(DatabaseHelper dbHelper) async {
 
     // Imprime los datos de los usuarios obtenidos
     if (usuarios.isNotEmpty) {
-      logger.i("Usuarios encontrados en la base de datos:");
+      //logger.i("Usuarios encontrados en la base de datos:");
       for (var usuario in usuarios) {
+        /*
         logger.i("Nombre: ${usuario.id}");
         logger.i("Nombre: ${usuario.nombre}");
         logger.i("Email: ${usuario.email}");
@@ -138,6 +152,7 @@ Future<void> verificarRecetasExistentes(DatabaseHelper dbHelper) async {
         logger.i("Tipo de grano favorito: ${usuario.tipoGranoFavorito}");
         logger.i("Nivel de molienda: ${usuario.nivelMolienda}");
         logger.i("Recetas favoritas: ${usuario.recetasFavoritas}");
+        */
       }
       return true;
     } else {
@@ -145,6 +160,28 @@ Future<void> verificarRecetasExistentes(DatabaseHelper dbHelper) async {
       return false;
     }
   }
+
+  // Verifica los ingredientes de una receta en la base de datos
+Future<bool> verificarIngredientesPorReceta(int recetaId, DatabaseHelper dbHelper) async {
+  var ingredientes = await dbHelper.obtenerIngredientesDeReceta(recetaId);
+  var logger = Logger();
+
+  // Imprime los datos de los ingredientes obtenidos
+  if (ingredientes.isNotEmpty) {
+    logger.i("Ingredientes encontrados para la receta con ID $recetaId:");
+    for (var ingrediente in ingredientes) {
+      logger.i("ID Ingrediente: ${ingrediente.ingredienteId}");
+      logger.i("Nombre Ingrediente: ${ingrediente.nombreIngrediente}");
+      logger.i("Cantidad: ${ingrediente.cantidad}");
+      logger.i("Unidad de medida: ${ingrediente.unidadMedida}");
+    }
+    return true;
+  } else {
+    logger.i("No se encontraron ingredientes para la receta con ID $recetaId.");
+    return false;
+  }
+}
+
 
 
 class MyApp extends StatelessWidget 

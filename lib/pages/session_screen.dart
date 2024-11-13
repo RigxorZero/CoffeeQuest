@@ -78,7 +78,7 @@ class _SessionScreenState extends State<SessionScreen> {
     );
 
     // Guarda el usuario en la base de datos
-    await dbHelper.insertarUsuario(nuevoUsuario);
+    nuevoUsuario.id = await dbHelper.insertarUsuario(nuevoUsuario);
 
     setState(() {
       _usuario = nombreUsuario;
