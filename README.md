@@ -28,7 +28,8 @@ https://www.youtube.com/watch?v=KxvuP4FybVc&t=1s
 
 Para instalar y ejecutar este proyecto localmente:
 
-[Descargar APK](CoffeeQuest.apk)
+[Descargar APK](https://github.com/RigxorZero/CoffeeQuest/raw/main/CoffeeQuest.apk)
+
 
 
 ---
