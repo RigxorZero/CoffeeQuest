@@ -47,7 +47,24 @@ Para instalar y ejecutar este proyecto localmente:
 
 1. Al abrir la aplicación, encontrarás una lista de recetas de café disponibles.
 2. Navega por las distintas recetas, personalízalas según tus preferencias y guarda tus favoritas.
-3. Comparte tus creaciones con otros usuarios y califica las recetas que pruebes.
+3. Comparte tus creaciones con otros usuarios.
+
+---
+
+## Diagramas
+
+### Modelo relacional de referencia
+Se diseño el siguiente modelo relacional para comprender mejor como se comportaría la base de datos en un entorno relacional dado el uso de una tabla intermedia en el proyecto, sirvió más que nada como orientación.
+![Coffee Quest Modelo Relacional](diagramas/CoffeQuest_MR.png)
+
+### Diagrama de navegación
+En el siguiente diagrama se presenta la navegación entre las diferentes pantallas de la aplicación.
+![Coffee Quest Modelo Relacional](diagramas/CoffeeQuest _Navegacion.png)
+
+### Diagrama de flujo de creación de recetas
+En el siguiente diagrama se presenta el flujo que debe realizar el usuario para crear una receta dentro de la aplicación.
+![Coffee Quest Modelo Relacional](diagramas/CoffeeQuest_FlujoReceta.png)
+
 
 ---
 
@@ -57,37 +74,18 @@ Para instalar y ejecutar este proyecto localmente:
 
 1. **Gestión de Recetas de Café:**
    - RF1.1: El usuario debe poder ver una lista de recetas de café disponibles en la aplicación.
-   - RF1.2: El usuario debe poder filtrar recetas por técnica de preparación (espresso, pour-over, cold brew, etc.).
-   - RF1.3: El usuario debe poder personalizar las recetas, ajustando parámetros como el tipo de grano, tiempo de extracción y cantidad de agua.
-   - RF1.4: El usuario debe poder guardar recetas personalizadas en una lista de favoritas.
-   - RF1.5: El usuario debe poder compartir sus recetas a través de la aplicación con otros usuarios. (Sin desarrollar)
+   - RF1.2: El usuario debe poder personalizar las recetas, ajustando parámetros como el tipo de grano, tiempo de extracción y cantidad de agua.
+   - RF1.3: El usuario debe poder guardar recetas personalizadas en una lista de favoritas.
+   - RF1.4: El usuario debe poder compartir sus recetas a través de la aplicación con otros usuarios.
 
 2. **Guías de Preparación:**
    - RF2.1: La aplicación debe ofrecer guías paso a paso para diferentes tipos de café.
-   - RF2.2: Cada guía debe poder ser personalizada según las preferencias del usuario (ej. tiempo de preparación, cantidad de café, tipo de grano).
-   - RF2.3: Debe incluirse una sección de sugerencias y mejores prácticas al preparar café según el método seleccionado.
+   - RF2.2: Cada guía debe poder ser personalizada según las preferencias del usuario.
 
 3. **Personalización del Usuario:**
    - RF3.1: El usuario debe poder crear un perfil donde especifique sus preferencias personales (técnica de extracción favorita, nivel de molienda, tipo de grano preferido).
    - RF3.2: Las preferencias del usuario deben influir en las recetas y guías sugeridas dentro de la aplicación.
    - RF3.3: El usuario debe poder actualizar su perfil en cualquier momento.
-
-4. **Comunidad:**
-   - RF4.1: Los usuarios deben poder dejar reseñas y calificaciones para cada receta de café.
-   - RF4.2: Los usuarios deben poder comentar y discutir sobre recetas en una sección de foro o chat.
-   - RF4.3: La aplicación debe tener una funcionalidad de votación donde las recetas mejor calificadas aparezcan en una sección destacada.
-  
-5. **Exploración de Nuevas Recetas:**
-
-   - RF5.1: El usuario debe poder buscar recetas nuevas según sus intereses, como ingredientes exóticos o técnicas innovadoras.
-   - RF5.2: Debe existir una opción de "receta del día" que muestre preparaciones destacadas o nuevas cada vez que el usuario accede a la aplicación.
-   - RF5.3: El usuario debe poder explorar recetas que utilizan equipos específicos (ej. Aeropress, Chemex, etc.).
-  
-6. **Gestión de Productos Relacionados:**
-
-   - RF6.1: La aplicación debe mostrar productos relacionados con la preparación del café (ej. molinos, prensas, etc.).
-   - RF6.2: Los productos deben estar vinculados a las recetas, facilitando la compra de equipo necesario directamente desde la aplicación.
-   - RF6.3: El usuario debe poder recibir sugerencias de productos basados en sus preferencias personales y recetas favoritas.
 
 ### Requerimientos No Funcionales
 
@@ -101,7 +99,6 @@ Para instalar y ejecutar este proyecto localmente:
 
 3. **Seguridad:**
    - RNF3.1: La aplicación debe garantizar la privacidad de los datos del usuario, almacenando sus preferencias y recetas de manera segura.
-   - RNF3.2: Los usuarios deben poder eliminar su cuenta y todos los datos relacionados en cualquier momento.
 
 4. **Escalabilidad:**
    - RNF4.1: La aplicación debe poder gestionar grandes cantidades de usuarios y recetas sin afectar el rendimiento.
