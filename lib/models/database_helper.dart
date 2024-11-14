@@ -139,17 +139,6 @@ class DatabaseHelper
       )
     ''');
 
-    // Tabla intermedia para las recetas favoritas de los usuarios
-    await db.execute
-    ('''
-      CREATE TABLE usuario_recetas_favoritas(
-        usuarioId INTEGER,
-        recetaId INTEGER,
-        FOREIGN KEY (usuarioId) REFERENCES usuarios(id),
-        FOREIGN KEY (recetaId) REFERENCES recetas(id)
-      )
-    ''');
-
     String jsonStringEquipos = await rootBundle.loadString('assets/equipos.json');
     List<dynamic> jsonResponseEquipos = json.decode(jsonStringEquipos);
 
