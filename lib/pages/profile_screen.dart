@@ -1,15 +1,15 @@
 import 'dart:io';
-
 import 'package:coffee_quest/models/receta_cafe.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/usuario.dart';
 import 'details_receta_screen.dart';
 import '../models/database_helper.dart';
-import 'package:coffee_quest/pages/opinion_screen.dart'; // Asegúrate de que la ruta sea correcta
+import 'package:coffee_quest/pages/opinion_screen.dart';
 
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatefulWidget 
+{
   final Usuario usuario;
   const ProfileScreen({super.key, required this.usuario});
 
@@ -17,7 +17,8 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> 
+{
   final List<String> _metodos = ['Desconocido', 'Espresso', 'Prensa Francesa', 'Cafetera Italiana', 'Cafetera de Goteo'];
   final List<String> _tiposGrano = ['Desconocido', 'Arábica', 'Robusta', 'Mezcla'];
   final List<String> _nivelesMolienda = ['Desconocido', 'Fino', 'Medio', 'Grueso'];
@@ -31,7 +32,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late Future<List<RecetaCafe>> _futureRecetasFavoritas;
 
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
     nombre = widget.usuario.nombre;
     usuarioActual = widget.usuario;
@@ -40,7 +42,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Carga de preferencias guardadas
-  Future<void> _loadPreferences() async {
+  Future<void> _loadPreferences() async 
+  {
 
     setState(() {
       _metodoSeleccionado = usuarioActual.metodoFavorito;
@@ -50,16 +53,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Método para mostrar imagen, verificando si es de los assets o un archivo local
-  Widget _mostrarImagen(String rutaImagen) {
-    if (rutaImagen.startsWith('assets/')) {
-      return Image.asset(
+  Widget _mostrarImagen(String rutaImagen) 
+  {
+    if (rutaImagen.startsWith('assets/')) 
+    {
+      return Image.asset
+      (
         rutaImagen,
         width: 50,  // Tamaño ajustado para miniatura
         height: 50,
         fit: BoxFit.cover,  // Ajuste para miniaturas
       );
-    } else {
-      return Image.file(
+    } else 
+    {
+      return Image.file
+      (
         File(rutaImagen),
         width: 50,  // Tamaño ajustado para miniatura
         height: 50,
@@ -68,21 +76,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<List<RecetaCafe>> _loadRecetasFavoritas() async {
+  Future<List<RecetaCafe>> _loadRecetasFavoritas() async 
+  {
     List<int> recetaIds = usuarioActual.recetasFavoritas;
 
     // Verificar que la lista de IDs no esté vacía
-    if (recetaIds.isEmpty) {
+    if (recetaIds.isEmpty) 
+    {
       return [];
     }
-
-    // Obtener las recetas completas utilizando los IDs
     List<RecetaCafe> recetas = await dbHelper.obtenerRecetasPorIds(recetaIds);
     return recetas;
   }
 
   // Guardar las preferencias seleccionadas
-  Future<void> _savePreferences() async {
+  Future<void> _savePreferences() async 
+  {
     // Guardar preferencias en SharedPreferences
     Usuario? usuarioDB = await dbHelper.obtenerUsuario(nombre);
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -91,7 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await prefs.setString('nivelMoliendaSeleccionado', _nivelMoliendaSeleccionado);
 
     // Guardar las preferencias en la base de datos
-    usuarioDB?.actualizarPreferencias(
+    usuarioDB?.actualizarPreferencias
+    (
       _metodoSeleccionado,
       _tipoGranoSeleccionado,
       _nivelMoliendaSeleccionado,
@@ -100,9 +110,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+  Widget build(BuildContext context) 
+  {
+    return Scaffold
+    (
+      appBar: AppBar
+      (
         title: const Text('Perfil'),
         backgroundColor: const Color(0xFFD9AB82),
         leading: IconButton(
@@ -112,45 +125,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         ),
       ),
-      body: Padding(
+      body: Padding
+      (
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: Column
+        (
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Text(
+          children: 
+          [
+            Row
+            (
+              children: 
+              [
+                const Text
+                (
                   'Nombre:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 5),
-                Text(
+                Text
+                (
                   widget.usuario.nombre,
                   style: const TextStyle(fontSize: 18),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            Row(
-              children: [
-                const Text(
+            Row
+            (
+              children: 
+              [
+                const Text
+                (
                   'Email:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 5),
-                Text(
+                Text
+                (
                   widget.usuario.email,
                   style: const TextStyle(fontSize: 18),
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
+            ElevatedButton
+            (
+              onPressed: () 
+              {
                 // Navegar a la pantalla de retroalimentación
-                Navigator.push(
+                Navigator.push
+                (
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => OpinionScreen(), // Asegúrate de pasar los parámetros si es necesario
+                  MaterialPageRoute
+                  (
+                    builder: (context) => OpinionScreen(),
                   ),
                 );
               },
@@ -161,48 +189,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const Text('Preferencias de Café', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             const Text('Método de Preparación:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            DropdownButton<String>(
+            DropdownButton<String>
+            (
               value: _metodoSeleccionado,
-              items: _metodos.map((String metodo) {
+              items: _metodos.map((String metodo) 
+              {
                 return DropdownMenuItem<String>(value: metodo, child: Text(metodo));
               }).toList(),
-              onChanged: (String? nuevoMetodo) {
-                setState(() {
+              onChanged: (String? nuevoMetodo) 
+              {
+                setState(() 
+                {
                   _metodoSeleccionado = nuevoMetodo!;
                 });
               },
             ),
             const SizedBox(height: 10),
             const Text('Tipo de Grano Favorito:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            DropdownButton<String>(
+            DropdownButton<String>
+            (
               value: _tipoGranoSeleccionado,
-              items: _tiposGrano.map((String tipo) {
+              items: _tiposGrano.map((String tipo) 
+              {
                 return DropdownMenuItem<String>(value: tipo, child: Text(tipo));
               }).toList(),
-              onChanged: (String? nuevoTipo) {
-                setState(() {
+              onChanged: (String? nuevoTipo) 
+              {
+                setState(() 
+                {
                   _tipoGranoSeleccionado = nuevoTipo!;
                 });
               },
             ),
             const SizedBox(height: 10),
             const Text('Nivel de Molienda:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            DropdownButton<String>(
+            DropdownButton<String>
+            (
               value: _nivelMoliendaSeleccionado,
-              items: _nivelesMolienda.map((String nivel) {
+              items: _nivelesMolienda.map((String nivel) 
+              {
                 return DropdownMenuItem<String>(value: nivel, child: Text(nivel));
               }).toList(),
-              onChanged: (String? nuevoNivel) {
-                setState(() {
+              onChanged: (String? nuevoNivel) 
+              {
+                setState(() 
+                {
                   _nivelMoliendaSeleccionado = nuevoNivel!;
                 });
               },
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  widget.usuario.actualizarPreferencias(
+            ElevatedButton
+            (
+              onPressed: () 
+              {
+                setState(() 
+                {
+                  widget.usuario.actualizarPreferencias
+                  (
                     _metodoSeleccionado,
                     _tipoGranoSeleccionado,
                     _nivelMoliendaSeleccionado,
@@ -216,36 +260,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 20),
             const Text('Recetas Favoritas:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             // Usamos FutureBuilder para cargar las recetas favoritas
-            Expanded(
-              child: FutureBuilder<List<RecetaCafe>>(
+            Expanded
+            (
+              child: FutureBuilder<List<RecetaCafe>>
+              (
                 future: _futureRecetasFavoritas,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                builder: (context, snapshot) 
+                {
+                  if (snapshot.connectionState == ConnectionState.waiting) 
+                  {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
+                  } else if (snapshot.hasError) 
+                  {
                     return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) 
+                  {
                     return const Center(child: Text('No tienes recetas favoritas.'));
-                  } else {
+                  } else 
+                  {
                     var recetasFavoritasCargadas = snapshot.data!;
-                    return ListView.builder(
+                    return ListView.builder
+                    (
                       itemCount: recetasFavoritasCargadas.length,
-                      itemBuilder: (context, index) {
-                        return Card(
+                      itemBuilder: (context, index) 
+                      {
+                        return Card
+                        (
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
+                          child: ListTile
+                          (
                             title: Text(recetasFavoritasCargadas[index].nombreReceta),
                             subtitle: Text(recetasFavoritasCargadas[index].descripcion),
-                            leading: SizedBox(
-                              width: 50,  // Ajusta el tamaño según lo necesites
+                            leading: SizedBox
+                            (
+                              width: 50,
                               height: 50,
                               child: _mostrarImagen(recetasFavoritasCargadas[index].imagen),
                             ),
                             onTap: () {
-                              Navigator.push(
+                              Navigator.push
+                              (
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetalleRecetaScreen(
+                                MaterialPageRoute
+                                (
+                                  builder: (context) => DetalleRecetaScreen
+                                  (
                                     receta: recetasFavoritasCargadas[index],
                                     usuarioActual: widget.usuario,
                                   ),

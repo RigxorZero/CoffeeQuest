@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:coffee_quest/pages/create_receta_screen.dart';
 import 'package:flutter/material.dart';
 import '../models/receta_cafe.dart';
@@ -10,7 +9,8 @@ import 'details_receta_screen.dart';
 import '../models/database_helper.dart';
 
 // ignore: must_be_immutable
-class RecetasScreen extends StatefulWidget {
+class RecetasScreen extends StatefulWidget 
+{
   RecetasScreen({super.key, required this.title, required this.usuario});
 
   String title;
@@ -20,7 +20,8 @@ class RecetasScreen extends StatefulWidget {
   State<RecetasScreen> createState() => _RecetasScreenState();
 }
 
-class _RecetasScreenState extends State<RecetasScreen> {
+class _RecetasScreenState extends State<RecetasScreen> 
+{
   List<RecetaCafe> _recetas = [];
   // ignore: unused_field
   List<Ingrediente> _ingredientes = [];
@@ -28,73 +29,83 @@ class _RecetasScreenState extends State<RecetasScreen> {
   List<Equipo> _equipos = [];
 
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
     _loadData();
   }
 
   // Cargar los datos necesarios (ingredientes, equipos y recetas)
-  Future<void> _loadData() async {
+  Future<void> _loadData() async 
+  {
     await _loadIngredientes();
     await _loadEquipos();
     await _loadRecetas();
   }
 
   // Cargar ingredientes desde la base de datos
-  Future<void> _loadIngredientes() async {
+  Future<void> _loadIngredientes() async 
+  {
     var ingredientes = await DatabaseHelper().obtenerIngredientes();
-    setState(() {
+    setState(() 
+    {
       _ingredientes = ingredientes;
     });
   }
 
   // Cargar equipos desde la base de datos
-  Future<void> _loadEquipos() async {
+  Future<void> _loadEquipos() async 
+  {
     var equipos = await DatabaseHelper().obtenerEquipos();
-    setState(() {
+    setState(() 
+    {
       _equipos = equipos;
     });
   }
 
   // Cargar recetas desde la base de datos
-  Future<void> _loadRecetas() async {
-  var recetas = await DatabaseHelper().obtenerRecetas();
+  Future<void> _loadRecetas() async 
+  {
+    var recetas = await DatabaseHelper().obtenerRecetas();
 
-  // Obtener todos los usuarios y filtrar el que es "CoffeeQuest"
-  var usuarios = await DatabaseHelper().obtenerUsuarios();
-  var idCoffeQuest = usuarios.firstWhere((usuario) => usuario.nombre == "CoffeeQuest").id;
+    // Obtener todos los usuarios y filtrar el que es "CoffeeQuest"
+    var usuarios = await DatabaseHelper().obtenerUsuarios();
+    var idCoffeQuest = usuarios.firstWhere((usuario) => usuario.nombre == "CoffeeQuest").id;
 
-  // Filtrar recetas creadas por "CoffeeQuest"
-  var recetasFiltradas = recetas.where((receta) => receta.creadorId == idCoffeQuest).toList();
+    // Filtrar recetas creadas por "CoffeeQuest"
+    var recetasFiltradas = recetas.where((receta) => receta.creadorId == idCoffeQuest).toList();
 
-  // Filtrar las recetas que están en las favoritas del usuario actual
-  var recetasFavoritas = widget.usuario.recetasFavoritas; // Obtener las recetas favoritas directamente
+    // Filtrar las recetas que están en las favoritas del usuario actual
+    var recetasFavoritas = widget.usuario.recetasFavoritas;
 
-  // Filtrar las recetas que son favoritas del usuario y son de "CoffeeQuest"
-  var recetasFavoritasDeCoffeeQuest = recetasFiltradas.where((receta) => recetasFavoritas.contains(receta.id)).toList();
+    var recetasFavoritasDeCoffeeQuest = recetasFiltradas.where((receta) => recetasFavoritas.contains(receta.id)).toList();
 
-  // Obtener recetas creadas por el usuario actual
-  var recetasDelUsuario = recetas.where((receta) => receta.creadorId == widget.usuario.id).toList();
+    var recetasDelUsuario = recetas.where((receta) => receta.creadorId == widget.usuario.id).toList();
 
-  // Combinar recetas de "CoffeeQuest" que son favoritas y las recetas del usuario
-  var recetasFinal = [...recetasFavoritasDeCoffeeQuest, ...recetasDelUsuario];
+    var recetasFinal = [...recetasFavoritasDeCoffeeQuest, ...recetasDelUsuario];
 
-  setState(() {
-    _recetas = recetasFinal;
-  });
-}
+    setState(() 
+    {
+      _recetas = recetasFinal;
+    });
+  }
 
-// Método para mostrar imagen, verificando si es de los assets o un archivo local
-  Widget _mostrarImagen(String rutaImagen) {
-    if (rutaImagen.startsWith('assets/')) {
-      return Image.asset(
+  // Método para mostrar imagen, verificando si es de los assets o un archivo local
+  Widget _mostrarImagen(String rutaImagen) 
+  {
+    if (rutaImagen.startsWith('assets/')) 
+    {
+      return Image.asset
+      (
         rutaImagen,
         width: 50,  // Tamaño ajustado para miniatura
         height: 50,
         fit: BoxFit.cover,  // Ajuste para miniaturas
       );
-    } else {
-      return Image.file(
+    } else 
+    {
+      return Image.file
+      (
         File(rutaImagen),
         width: 50,  // Tamaño ajustado para miniatura
         height: 50,
@@ -103,48 +114,58 @@ class _RecetasScreenState extends State<RecetasScreen> {
     }
   }
 
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
+  Widget build(BuildContext context) 
+  {
+    return Scaffold
+    (
+      body: ListView.builder
+      (
         itemCount: _recetas.length,
-        itemBuilder: (context, index) {
+        itemBuilder: (context, index) 
+        {
           final receta = _recetas[index];
-
-          return Card(
+          return Card
+          (
             elevation: 4.0,
             margin: const EdgeInsets.all(8.0),
-            child: ListTile(
+            child: ListTile
+            (
               title: Text(receta.nombreReceta),
               subtitle: Text(receta.descripcion),
               leading: _mostrarImagen(receta.imagen),
-              onTap: () {
+              onTap: () 
+              {
                 // Navegar a la pantalla de detalles de la receta
-                Navigator.push(
+                Navigator.push
+                (
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute
+                  (
                     builder: (context) => DetalleRecetaScreen(receta: receta, usuarioActual: widget.usuario),
                   ),
                 );
               },
-              onLongPress: () async {
+              onLongPress: () async 
+              {
                 // Verificar si el usuario es el creador de la receta
-                if (receta.creadorId == widget.usuario.id) {
+                if (receta.creadorId == widget.usuario.id) 
+                {
                   // Mostrar un diálogo de confirmación
                   bool confirmDelete = await _mostrarConfirmacionEliminar(context);
-                  if (confirmDelete) {
-                    // Eliminar la receta de la base de datos
+                  if (confirmDelete) 
+                  {
                     await DatabaseHelper().eliminarReceta(receta.id!);
 
-                    // Actualizar la lista de recetas
-                    setState(() {
+                    setState(() 
+                    {
                       _recetas.removeAt(index);
                     });
                   }
-                } else {
-                  // Si no es el creador, mostrar un mensaje
-                  ScaffoldMessenger.of(context).showSnackBar(
+                } else 
+                {
+                  ScaffoldMessenger.of(context).showSnackBar
+                  (
                     SnackBar(content: Text('No puedes eliminar recetas que no creaste.')),
                   );
                 }
@@ -153,12 +174,16 @@ class _RecetasScreenState extends State<RecetasScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
+      floatingActionButton: FloatingActionButton
+      (
+        onPressed: () 
+        {
           // Navegar a la pantalla para crear una nueva receta
-          Navigator.push(
+          Navigator.push
+          (
             context,
-            MaterialPageRoute(
+            MaterialPageRoute
+            (
               builder: (context) => CrearRecetaScreen(usuario: widget.usuario),
             ),
           );
@@ -170,30 +195,38 @@ class _RecetasScreenState extends State<RecetasScreen> {
   }
 
   // Método para mostrar un diálogo de confirmación de eliminación
-  Future<bool> _mostrarConfirmacionEliminar(BuildContext context) async {
-    return await showDialog<bool>(
+  Future<bool> _mostrarConfirmacionEliminar(BuildContext context) async 
+  {
+    return await showDialog<bool>
+    (
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
+      builder: (BuildContext context) 
+      {
+        return AlertDialog
+        (
           title: Text('Confirmar eliminación'),
           content: Text('¿Estás seguro de que quieres eliminar esta receta?'),
-          actions: <Widget>[
-            TextButton(
+          actions: <Widget>
+          [
+            TextButton
+            (
               child: Text('Cancelar'),
-              onPressed: () {
+              onPressed: () 
+              {
                 Navigator.of(context).pop(false);
               },
             ),
-            TextButton(
+            TextButton
+            (
               child: Text('Eliminar'),
-              onPressed: () {
+              onPressed: () 
+              {
                 Navigator.of(context).pop(true);
               },
             ),
           ],
         );
       },
-    ) ??
-    false;
+    ) ?? false;
   }
 }

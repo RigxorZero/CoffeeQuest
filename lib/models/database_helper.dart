@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -57,7 +56,8 @@ class DatabaseHelper
   {
     String path = await getDatabasesPath();
     String dbPath = join(path, 'coffeQuest.db');
-    return await openDatabase(
+    return await openDatabase
+    (
       dbPath,
       version: 5, // Actualiza la versión a 2 si es necesario migrar cambios
       onCreate: _onCreate,
@@ -68,7 +68,8 @@ class DatabaseHelper
   Future<void> _onCreate(Database db, int version) async 
   {
     // Tabla para las recetas
-    await db.execute('''
+    await db.execute
+    ('''
       CREATE TABLE recetas(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nombreReceta TEXT,
@@ -88,9 +89,9 @@ class DatabaseHelper
 
 ''');
 
-
     // Tabla para los ingredientes
-    await db.execute('''
+    await db.execute
+    ('''
       CREATE TABLE ingredientes(
         ingredienteId INTEGER PRIMARY KEY AUTOINCREMENT,
         nombreIngrediente TEXT,
@@ -99,7 +100,8 @@ class DatabaseHelper
     ''');
 
     // Tabla intermedia para la relación muchos-a-muchos entre recetas e ingredientes
-    await db.execute('''
+    await db.execute
+    ('''
       CREATE TABLE receta_ingredientes(
         recetaId INTEGER,
         ingredienteId INTEGER,
@@ -111,7 +113,8 @@ class DatabaseHelper
     ''');
 
     // Tabla para los equipos
-    await db.execute('''
+    await db.execute
+    ('''
       CREATE TABLE equipos(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombreEquipo TEXT,
@@ -123,7 +126,8 @@ class DatabaseHelper
     ''');
 
     // Tabla para los usuarios
-    await db.execute('''
+    await db.execute
+    ('''
       CREATE TABLE usuarios(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT,
@@ -136,7 +140,8 @@ class DatabaseHelper
     ''');
 
     // Tabla intermedia para las recetas favoritas de los usuarios
-    await db.execute('''
+    await db.execute
+    ('''
       CREATE TABLE usuario_recetas_favoritas(
         usuarioId INTEGER,
         recetaId INTEGER,
@@ -149,15 +154,17 @@ class DatabaseHelper
     List<dynamic> jsonResponseEquipos = json.decode(jsonStringEquipos);
 
     // Insertar los datos del JSON en la tabla 'equipos'
-    for (var item in jsonResponseEquipos) {
-      await db.insert(
+    for (var item in jsonResponseEquipos) 
+    {
+      await db.insert
+      (
         'equipos',
         {
           'nombreEquipo': item['nombreEquipo'],
           'tipo': item['tipo'],
           'descripcion': item['descripcion'],
           'imagen': item['imagen'],
-          'enlacesCompra': json.encode(item['enlacesCompra']),  // Convertimos la lista en String JSON
+          'enlacesCompra': json.encode(item['enlacesCompra']),
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -166,9 +173,10 @@ class DatabaseHelper
     String jsonStringIngredientes = await rootBundle.loadString('assets/ingredientes.json');
     List<dynamic> jsonResponseIngredientes = json.decode(jsonStringIngredientes);
 
-    // Insertar los datos del JSON en la tabla 'equipos'
-    for (var item in jsonResponseIngredientes) {
-      await db.insert(
+    for (var item in jsonResponseIngredientes) 
+    {
+      await db.insert
+      (
         'ingredientes',
         {
           'nombreIngrediente': item['nombreIngrediente'],
@@ -178,13 +186,14 @@ class DatabaseHelper
       );
     }
 
-    // Cargar las recetas desde el archivo JSON
     String jsonStringRecetas = await rootBundle.loadString('assets/recetas.json');
     List<dynamic> jsonResponseRecetas = json.decode(jsonStringRecetas);
 
-    for (var item in jsonResponseRecetas) {
+    for (var item in jsonResponseRecetas) 
+    {
       // Insertar la receta
-      int recetaId = await db.insert(
+      int recetaId = await db.insert
+      (
         'recetas',
         {
           'nombreReceta': item['nombreReceta'],
@@ -220,11 +229,11 @@ class DatabaseHelper
   }
 
   // Método para insertar un usuario en la base de datos
-  Future<int> insertarUsuario(Usuario usuario) async {
+  Future<int> insertarUsuario(Usuario usuario) async 
+  {
     var db = await database;
-
-    // Insertar el usuario y obtener el ID insertado
-    int userId = await db.insert(
+    int userId = await db.insert
+    (
       'usuarios',
       usuario.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
@@ -235,10 +244,9 @@ class DatabaseHelper
   }
 
   // Método para incrementar el contador de veces que una receta ha sido preparada
-  Future<void> incrementarVecesPreparada(int recetaId) async {
+  Future<void> incrementarVecesPreparada(int recetaId) async 
+  {
     var db = await database;
-
-    // Primero, obtener el valor actual de 'vecesPreparada'
     var result = await db.query(
       'recetas',
       columns: ['vecesPreparada'],
@@ -246,13 +254,12 @@ class DatabaseHelper
       whereArgs: [recetaId],
     );
 
-    if (result.isNotEmpty) {
-      // Obtener el valor actual y sumarle 1
+    if (result.isNotEmpty) 
+    {
       int vecesPreparada = result.first['vecesPreparada'] as int;
       vecesPreparada += 1;
-
-      // Actualizar el valor en la base de datos
-      await db.update(
+      await db.update
+      (
         'recetas',
         {'vecesPreparada': vecesPreparada},
         where: 'id = ?',
@@ -263,13 +270,15 @@ class DatabaseHelper
 
 
   // Método para actualizar una receta en la base de datos
-  Future<void> updateReceta(int recetaId, RecetaCafe recetaActualizada) async {
+  Future<void> updateReceta(int recetaId, RecetaCafe recetaActualizada) async 
+  {
     var db = await database;
     var logger = Logger();
 
-    try {
-      // Actualizar los datos básicos de la receta en la tabla 'recetas'
-      await db.update(
+    try 
+    {
+      await db.update
+      (
         'recetas',
         {
           columnNombreReceta: recetaActualizada.nombreReceta,
@@ -287,16 +296,16 @@ class DatabaseHelper
         whereArgs: [recetaId],
       );
 
-      // Eliminar los ingredientes antiguos de la tabla intermedia 'receta_ingredientes'
-      await db.delete(
+      await db.delete
+      (
         'receta_ingredientes',
         where: 'recetaId = ?',
         whereArgs: [recetaId],
       );
-
-      // Insertar los nuevos ingredientes en la tabla intermedia
-      for (var ingrediente in recetaActualizada.ingredientes) {
-        await db.insert(
+      for (var ingrediente in recetaActualizada.ingredientes) 
+      {
+        await db.insert
+        (
           'receta_ingredientes',
           {
             'recetaId': recetaId,
@@ -306,9 +315,9 @@ class DatabaseHelper
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
-
       logger.i("Receta con ID $recetaId actualizada exitosamente.");
-    } catch (e) {
+    } catch (e) 
+    {
       logger.e("Error al actualizar la receta con ID $recetaId: $e");
       rethrow;
     }
@@ -316,19 +325,21 @@ class DatabaseHelper
 
 
 
-  Future<void> insertarIngredienteReceta(int recetaId, int ingredienteId, String cantidad, String unidadMedida) async {
-  var db = await database;
-  await db.insert(
-    'receta_ingredientes',
-    {
-      'recetaId': recetaId,
-      'ingredienteId': ingredienteId,
-      'cantidad': cantidad,
-      'unidadMedida': unidadMedida, 
-    },
-    conflictAlgorithm: ConflictAlgorithm.replace,
-  );
-}
+  Future<void> insertarIngredienteReceta(int recetaId, int ingredienteId, String cantidad, String unidadMedida) async 
+  {
+    var db = await database;
+    await db.insert
+    (
+      'receta_ingredientes',
+      {
+        'recetaId': recetaId,
+        'ingredienteId': ingredienteId,
+        'cantidad': cantidad,
+        'unidadMedida': unidadMedida, 
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
   // Método para obtener todos los usuarios
   Future<List<Usuario>> obtenerUsuarios() async 
@@ -344,11 +355,8 @@ class DatabaseHelper
   Future<List<Ingrediente>> obtenerIngredientes() async 
   {
     var db = await database;
-
-    // Consultar todos los ingredientes en la base de datos
     var resultado = await db.query('ingredientes');
     
-    // Convertir los resultados a una lista de objetos Ingrediente
     return List.generate(resultado.length, (i) 
     {
       return Ingrediente.fromMap(resultado[i]);
@@ -356,49 +364,44 @@ class DatabaseHelper
   }
 
 
-  Future<List<Ingrediente>> obtenerIngredientesPorReceta(int recetaId) async {
-  final db = await database;
+  Future<List<Ingrediente>> obtenerIngredientesPorReceta(int recetaId) async 
+  {
+    final db = await database;
+    var result = await db.rawQuery
+    ('''
+      SELECT 
+        ingredientes.*, 
+        receta_ingredientes.cantidad AS cantidad
+      FROM 
+        ingredientes 
+      JOIN 
+        receta_ingredientes 
+      ON 
+        ingredientes.ingredienteId = receta_ingredientes.ingredienteId 
+      WHERE 
+        receta_ingredientes.recetaId = ?
+    ''', [recetaId]);
 
-  // Consulta para obtener los datos de la tabla ingredientes y la cantidad desde receta_ingredientes
-  var result = await db.rawQuery('''
-    SELECT 
-      ingredientes.*, 
-      receta_ingredientes.cantidad AS cantidad
-    FROM 
-      ingredientes 
-    JOIN 
-      receta_ingredientes 
-    ON 
-      ingredientes.ingredienteId = receta_ingredientes.ingredienteId 
-    WHERE 
-      receta_ingredientes.recetaId = ?
-  ''', [recetaId]);
-
-  List<Ingrediente> ingredientes = [];
-  for (var item in result) {
-    ingredientes.add(Ingrediente(
-      ingredienteId: item['ingredienteId'] as int,
-      nombreIngrediente: item['nombreIngrediente'] as String,
-      cantidad: item['cantidad'] as String,
-      unidadMedida: item['unidadMedida'] as String,
-    ));
+    List<Ingrediente> ingredientes = [];
+    for (var item in result) 
+    {
+      ingredientes.add(Ingrediente
+      (
+        ingredienteId: item['ingredienteId'] as int,
+        nombreIngrediente: item['nombreIngrediente'] as String,
+        cantidad: item['cantidad'] as String,
+        unidadMedida: item['unidadMedida'] as String,
+      ));
+    }
+    return ingredientes;
   }
-
-  return ingredientes;
-}
-
-
-
 
   // Método para obtener todos los equipos
   Future<List<Equipo>> obtenerEquipos() async 
   {
     var db = await database;
-
-    // Consultar todos los equipos en la base de datos
     var resultado = await db.query('equipos');
 
-    // Convertir los resultados a una lista de objetos Equipo
     return List.generate(resultado.length, (i) 
     {
       return Equipo.fromMap(resultado[i]);
@@ -409,158 +412,146 @@ class DatabaseHelper
   {
     final db = await database;
     var result = await db.query('equipos', where: 'id = ?', whereArgs: [equipoId]);
-
-    if (result.isNotEmpty) {
-      return Equipo(
+    if (result.isNotEmpty) 
+    {
+      return Equipo
+      (
         id: result[0]['id'] as int,
         nombreEquipo: result[0]['nombreEquipo'] as String,
         descripcion: result[0]['descripcion'] as String,
         tipo: result[0]['tipo'] as String,
         imagen: result[0]['imagen'] as String,
-        // Usar split para separar los enlaces si están guardados en una cadena separada por comas
         enlacesCompra: (result[0]['enlacesCompra'] as String).split(',').toList(),
       );
-    } else {
+    } else 
+    {
       return null;
     }
   }
 
-  Future<int?> obtenerEquipoIdPorNombre(String nombreEquipo) async {
-  var db = await database;
+  Future<int?> obtenerEquipoIdPorNombre(String nombreEquipo) async 
+  {
+    var db = await database;
+    var result = await db.query
+    (
+      'equipos',
+      where: 'nombreEquipo = ?',
+      whereArgs: [nombreEquipo],
+    );
 
-  // Realizar la consulta para obtener el equipo por su nombre
-  var result = await db.query(
-    'equipos',
-    where: 'nombreEquipo = ?',
-    whereArgs: [nombreEquipo],
-  );
+    if (result.isNotEmpty) 
+    {
+      return result.first['id'] as int;
+    }
 
-  if (result.isNotEmpty) {
-    // Si se encuentra el equipo, retornamos el id
-    return result.first['id'] as int;
+    return null;
   }
-
-  return null; // Si no se encuentra, retornamos null
-}
-
-
-
-
 
   // Método para obtener todas las recetas
   Future<List<RecetaCafe>> obtenerRecetas() async 
   {
     var db = await database;
-
-    // Obtener todas las recetas de la tabla 'recetas'
     var resultado = await db.query('recetas');
-
-    // Convertir las filas de la base de datos en una lista de objetos RecetaCafe
-    return List.generate(resultado.length, (i) {
+    return List.generate(resultado.length, (i) 
+    {
       return RecetaCafe.fromMap(resultado[i]);
     });
   }
 
   // Método para obtener el valor máximo del ID en la tabla 'recetas'
-  Future<int> obtenerMaxRecetaId() async {
+  Future<int> obtenerMaxRecetaId() async 
+  {
     var db = await database;
-
-    // Realizar una consulta para obtener el valor máximo del ID de la tabla 'recetas'
     var result = await db.rawQuery('SELECT MAX(id) FROM recetas');
-
-    // Si la consulta devuelve un valor, lo retornamos, sino devolvemos 0
     return result.isNotEmpty && result.first['MAX(id)'] != null
         ? result.first['MAX(id)'] as int
         : 0;
   }
 
-
-  Future<List<RecetaCafe>> obtenerRecetasPorIds(List<int> ids) async {
-    try {
+  Future<List<RecetaCafe>> obtenerRecetasPorIds(List<int> ids) async 
+  {
+    try 
+    {
       var db = await database;
-      
-      // Preparamos la consulta
-      String idsString = ids.join(','); // Convertimos los IDs en un formato de cadena para la consulta
-      List<Map<String, dynamic>> result = await db.rawQuery(''' 
+      String idsString = ids.join(',');
+      List<Map<String, dynamic>> result = await db.rawQuery
+      (''' 
         SELECT * FROM Recetas WHERE id IN ($idsString)
       ''');
 
-      // Mapear los resultados a objetos RecetaCafe
       logger.i("Recetas obtenidas: $result");
       return result.map((map) => RecetaCafe.fromMap(map)).toList();
     } catch (e) {
       logger.e("Error al obtener recetas por IDs: $e");
-      rethrow; // Vuelve a lanzar la excepción
-    }
-  }
-
-  Future<RecetaCafe?> obtenerRecetaPorId(int id) async {
-  try {
-    var db = await database;
-
-    // Realizamos la consulta para obtener la receta por su ID
-    List<Map<String, dynamic>> result = await db.query(
-      'recetas',
-      where: 'id = ?',        // Filtrar por ID
-      whereArgs: [id],        // Pasamos el ID a la consulta
-    );
-
-    if (result.isNotEmpty) {
-      // Si encontramos la receta, la mapeamos y la devolvemos
-      return RecetaCafe.fromMap(result.first);
-    } else {
-      // Si no encontramos la receta, devolvemos null
-      return null;
-    }
-  } catch (e) {
-    logger.e("Error al obtener receta por ID: $e");
-    rethrow; // Lanzamos la excepción si algo sale mal
-  }
-}
-
-
-
-// Método para actualizar las preferencias de un usuario
-Future<void> updateUsuario(Usuario usuario) async 
-{
-  var db = await database;
-
-  // Actualiza las preferencias del usuario
-  await db.update(
-    'usuarios',
-    usuario.toMap(),
-    where: 'id = ?',
-    whereArgs: [usuario.id],
-  );
-}
-
-  // Método para eliminar una receta de la base de datos
-  Future<void> eliminarReceta(int recetaId) async {
-    var db = await database;
-    
-    try {
-      // Primero, eliminamos los ingredientes relacionados con la receta de la tabla intermedia 'receta_ingredientes'
-      await db.delete(
-        'receta_ingredientes',
-        where: 'recetaId = ?',
-        whereArgs: [recetaId],
-      );
-
-      // Luego, eliminamos la receta de la tabla 'recetas'
-      await db.delete(
-        'recetas',
-        where: 'id = ?',
-        whereArgs: [recetaId],
-      );
-
-      logger.i("Receta con ID $recetaId eliminada exitosamente.");
-    } catch (e) {
-      logger.e("Error al eliminar la receta con ID $recetaId: $e");
       rethrow;
     }
   }
 
+  Future<RecetaCafe?> obtenerRecetaPorId(int id) async 
+  {
+    try 
+    {
+      var db = await database;
+      List<Map<String, dynamic>> result = await db.query
+      (
+        'recetas',
+        where: 'id = ?',
+        whereArgs: [id],
+      );
 
+      if (result.isNotEmpty) 
+      {
+        return RecetaCafe.fromMap(result.first);
+      } else 
+      {
+        return null;
+      }
+    } catch (e) 
+    {
+      logger.e("Error al obtener receta por ID: $e");
+      rethrow;
+    }
+  }
+
+  // Método para actualizar las preferencias de un usuario
+  Future<void> updateUsuario(Usuario usuario) async 
+  {
+    var db = await database;
+    // Actualiza las preferencias del usuario
+    await db.update
+    (
+      'usuarios',
+      usuario.toMap(),
+      where: 'id = ?',
+      whereArgs: [usuario.id],
+    );
+  }
+
+  // Método para eliminar una receta de la base de datos
+  Future<void> eliminarReceta(int recetaId) async 
+  {
+    var db = await database;
+    try 
+    {
+      await db.delete
+      (
+        'receta_ingredientes',
+        where: 'recetaId = ?',
+        whereArgs: [recetaId],
+      );
+      await db.delete
+      (
+        'recetas',
+        where: 'id = ?',
+        whereArgs: [recetaId],
+      );
+      logger.i("Receta con ID $recetaId eliminada exitosamente.");
+    } catch (e) 
+    {
+      logger.e("Error al eliminar la receta con ID $recetaId: $e");
+      rethrow;
+    }
+  }
 
   // Método para obtener un usuario por su Nombre
   Future<Usuario?> obtenerUsuario(String nombre) async 
@@ -583,13 +574,15 @@ Future<void> updateUsuario(Usuario usuario) async
   }
 
   // Insertar receta en la base de datos
-  Future<int> insertReceta(RecetaCafe receta) async {
+  Future<int> insertReceta(RecetaCafe receta) async 
+  {
     var db = await database;
 
     // Convertir la lista de ingredientes a Map y luego a JSON
     List<Map<String, dynamic>> ingredientesMap = receta.ingredientes.map((ingrediente) => ingrediente.toMap()).toList();
 
-    Map<String, dynamic> row = {
+    Map<String, dynamic> row = 
+    {
       columnNombreReceta: receta.nombreReceta,
       columnDescripcion: receta.descripcion,
       columnIngredientes: jsonEncode(ingredientesMap), // Si es lista, la conviertes a String
@@ -613,8 +606,6 @@ Future<void> updateUsuario(Usuario usuario) async
     return recetaId;
   }
 
-  
-
   // Método para obtener un usuario por su Nombre
   Future<Usuario?> obtenerUsuarioID(int id) async 
   {
@@ -631,60 +622,56 @@ Future<void> updateUsuario(Usuario usuario) async
     {
       return Usuario.fromMap(resultado.first);
     }
-    
     return null;
   }
 
   // Método para obtener los ingredientes de una receta por su ID
-Future<List<Ingrediente>> obtenerIngredientesDeReceta(int recetaId) async {
-  var db = await database;
-  var logger = Logger();
-
-  // Obtener los ingredientes relacionados con la receta
-  var resultado = await db.query(
-    'receta_ingredientes',
-    where: 'recetaId = ?',
-    whereArgs: [recetaId],
-  );
-
-  if (resultado.isEmpty) {
-    logger.i("No se encontraron ingredientes para la receta con ID $recetaId.");
-    return []; // Retorna una lista vacía si no hay ingredientes
-  }
-
-  List<Ingrediente> ingredientes = [];
-
-  // Iterar sobre los ingredientes encontrados en 'receta_ingredientes'
-  for (var item in resultado) {
-    logger.i("RecetaIngrediente encontrado: ingredienteId = ${item['ingredienteId']}");
-
-    // Obtener los datos del ingrediente desde la tabla 'ingredientes'
-    var ingrediente = await db.query(
-      'ingredientes',
-      where: 'id = ?',
-      whereArgs: [item['ingredienteId']],
+  Future<List<Ingrediente>> obtenerIngredientesDeReceta(int recetaId) async 
+  {
+    var db = await database;
+    var logger = Logger();
+    var resultado = await db.query
+    (
+      'receta_ingredientes',
+      where: 'recetaId = ?',
+      whereArgs: [recetaId],
     );
 
-    if (ingrediente.isNotEmpty) {
-      ingredientes.add(Ingrediente.fromMap(ingrediente.first));
-      logger.i("Ingrediente encontrado: ${ingrediente.first['nombreIngrediente']}");
-    } else {
-      logger.w("Ingrediente con ID ${item['ingredienteId']} no encontrado.");
+    if (resultado.isEmpty) 
+    {
+      logger.i("No se encontraron ingredientes para la receta con ID $recetaId.");
+      return [];
     }
+
+    List<Ingrediente> ingredientes = [];
+    for (var item in resultado) 
+    {
+      logger.i("RecetaIngrediente encontrado: ingredienteId = ${item['ingredienteId']}");
+
+      var ingrediente = await db.query
+      (
+        'ingredientes',
+        where: 'id = ?',
+        whereArgs: [item['ingredienteId']],
+      );
+
+      if (ingrediente.isNotEmpty) 
+      {
+        ingredientes.add(Ingrediente.fromMap(ingrediente.first));
+        logger.i("Ingrediente encontrado: ${ingrediente.first['nombreIngrediente']}");
+      } else 
+      {
+        logger.w("Ingrediente con ID ${item['ingredienteId']} no encontrado.");
+      }
+    }
+    return ingredientes;
   }
 
-  return ingredientes;
-}
-
-// Método para obtener todos los registros de la tabla 'receta_ingredientes' para validar
-Future<List<Map<String, dynamic>>> obtenerTodosRecetaIngredientes() async {
-  var db = await database;
-
-  // Realiza una consulta para obtener todos los registros de la tabla 'receta_ingredientes'
-  var resultado = await db.query('receta_ingredientes');
-
-  return resultado; // Devuelve los registros encontrados
-}
-
-
+  // Método para obtener todos los registros de la tabla 'receta_ingredientes' para validar
+  Future<List<Map<String, dynamic>>> obtenerTodosRecetaIngredientes() async 
+  {
+    var db = await database;
+    var resultado = await db.query('receta_ingredientes');
+    return resultado;
+  }
 }

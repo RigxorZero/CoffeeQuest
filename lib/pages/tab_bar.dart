@@ -4,33 +4,44 @@ import 'home_screen.dart';
 import 'profile_screen.dart';
 import '../models/usuario.dart';
 
-class TabBarController extends StatelessWidget {
+class TabBarController extends StatelessWidget 
+{
   const TabBarController({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) 
+  {
     // Obtener el usuario pasado como argumento
     final Usuario usuario = ModalRoute.of(context)!.settings.arguments as Usuario;
 
-    return DefaultTabController(
+    return DefaultTabController
+    (
       length: 2, // Número de pestañas
-      child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              const Text('Coffee Quest'),  // Título de la app
-              const Spacer(),  // Empuja el icono hacia la derecha
-              GestureDetector(
-                onTap: () {
-                  // Acción para abrir el perfil del usuario
-                  Navigator.push(
+      child: Scaffold
+      (
+        appBar: AppBar
+        (
+          title: Row
+          (
+            children: 
+            [
+              const Text('Coffee Quest'), 
+              const Spacer(),
+              GestureDetector
+              (
+                onTap: () 
+                {
+                  Navigator.push
+                  (
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute
+                    (
                       builder: (context) => ProfileScreen(usuario: usuario),
                     ),
                   );
                 },
-                child: CircleAvatar(
+                child: CircleAvatar
+                (
                   backgroundImage: AssetImage('assets/images/user.png'),
                   radius: 20,
                 ),
@@ -38,15 +49,19 @@ class TabBarController extends StatelessWidget {
             ],
           ),
           backgroundColor: const Color(0xFFD9AB82),
-          bottom: const TabBar(
-            tabs: [
+          bottom: const TabBar
+          (
+            tabs: 
+            [
               Tab(text: 'Mis Recetas'),
               Tab(text: 'Barista'),
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
+        body: TabBarView
+        (
+          children: 
+          [
             RecetasScreen(title: 'Inicio', usuario: usuario),
             MyHomePage(title: 'Inicio', usuario: usuario),
           ],

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/usuario.dart';
-import '../models/database_helper.dart';  // Importa tu helper para la base de datos
+import '../models/database_helper.dart';
 
-class SessionScreen extends StatefulWidget {
+class SessionScreen extends StatefulWidget 
+{
   const SessionScreen({super.key, required this.title});
 
   final String title;
@@ -11,7 +12,8 @@ class SessionScreen extends StatefulWidget {
   State<SessionScreen> createState() => _SessionScreenState();
 }
 
-class _SessionScreenState extends State<SessionScreen> {
+class _SessionScreenState extends State<SessionScreen> 
+{
   String? _usuario;
   // ignore: unused_field
   String? _correo;
@@ -19,12 +21,13 @@ class _SessionScreenState extends State<SessionScreen> {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _correoController = TextEditingController();
   
-  final DatabaseHelper dbHelper = DatabaseHelper();  // Instancia de DatabaseHelper
+  final DatabaseHelper dbHelper = DatabaseHelper();
 
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
-    _loadUsuario(); // Cargar el usuario al iniciar
+    _loadUsuario();
   }
 
   // Función para cargar el usuario desde la base de datos
@@ -42,11 +45,12 @@ class _SessionScreenState extends State<SessionScreen> {
         {
           setState(() 
           {
-            _usuario = usuario.nombre;  // Establecemos el nombre del usuario
-            _correo = usuario.email;    // Establecemos el correo del usuario
+            _usuario = usuario.nombre;
+            _correo = usuario.email;
           });
 
-          Navigator.pushReplacementNamed(
+          Navigator.pushReplacementNamed
+          (
             // ignore: use_build_context_synchronously
             context, 
             '/home', 
@@ -58,16 +62,18 @@ class _SessionScreenState extends State<SessionScreen> {
     }
   }
 
-
   // Verifica si el usuario ya existe en la base de datos
-  Future<bool> verificarUsuarioExistente() async {
-    var usuarios = await dbHelper.obtenerUsuarios();  // Obtén los usuarios desde la DB
+  Future<bool> verificarUsuarioExistente() async 
+  {
+    var usuarios = await dbHelper.obtenerUsuarios();
     return usuarios.isNotEmpty;
   }
 
   // Función para guardar un nuevo usuario en la base de datos
-  Future<void> _guardarUsuario(String nombreUsuario, String correo) async {
-    Usuario nuevoUsuario = Usuario(
+  Future<void> _guardarUsuario(String nombreUsuario, String correo) async 
+  {
+    Usuario nuevoUsuario = Usuario
+    (
       nombre: nombreUsuario,
       email: correo,
       metodoFavorito: "Desconocido",
@@ -79,13 +85,15 @@ class _SessionScreenState extends State<SessionScreen> {
     // Guarda el usuario en la base de datos
     nuevoUsuario.id = await dbHelper.insertarUsuario(nuevoUsuario);
 
-    setState(() {
+    setState(() 
+    {
       _usuario = nombreUsuario;
       _correo = correo;
     });
 
     // Navega al home con el usuario recién creado
-    Navigator.pushReplacementNamed(
+    Navigator.pushReplacementNamed
+    (
       // ignore: use_build_context_synchronously
       context,
       '/home',
@@ -94,29 +102,39 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   // Widget para crear un usuario
-  Widget _buildCrearUsuario() {
-    return Column(
+  Widget _buildCrearUsuario() 
+  {
+    return Column
+    (
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: 
+      [
         const Text('Por favor, crea tu usuario:'),
-        Padding(
+        Padding
+        (
           padding: const EdgeInsets.all(8.0),
-          child: TextField(
+          child: TextField
+          (
             controller: _nombreController,
             decoration: const InputDecoration(labelText: 'Nombre de usuario'),
           ),
         ),
-        Padding(
+        Padding
+        (
           padding: const EdgeInsets.all(8.0),
-          child: TextField(
+          child: TextField
+          (
             controller: _correoController,
             decoration: const InputDecoration(labelText: 'Correo electrónico'),
             keyboardType: TextInputType.emailAddress,
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            if (_nombreController.text.isNotEmpty && _correoController.text.isNotEmpty) {
+        ElevatedButton
+        (
+          onPressed: () 
+          {
+            if(_nombreController.text.isNotEmpty && _correoController.text.isNotEmpty)
+            {
               _guardarUsuario(_nombreController.text, _correoController.text);
             }
           },
@@ -127,22 +145,28 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+  Widget build(BuildContext context) 
+  {
+    return Scaffold
+    (
+      appBar: AppBar
+      (
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Center
+      (
         child: _usuario == null
-            ? _buildCrearUsuario()
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Bienvenido, $_usuario!', style: const TextStyle(fontSize: 24)),
-                  const SizedBox(height: 20),
-                  const CircularProgressIndicator(),
-                ],
-              ),
+        ? _buildCrearUsuario()
+        : Column
+        (
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: 
+          [
+            Text('Bienvenido, $_usuario!', style: const TextStyle(fontSize: 24)),
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(),
+          ],
+        ),
       ),
     );
   }

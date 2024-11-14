@@ -23,7 +23,8 @@ class DetalleRecetaScreen extends StatefulWidget
   _DetalleRecetaScreenState createState() => _DetalleRecetaScreenState();
 }
 
-class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
+class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> 
+{
   final DatabaseHelper dbHelper = DatabaseHelper();
   bool _esFavorita = false;
   late Future<Usuario?> creadorFuture;
@@ -32,7 +33,8 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
   List<bool> _seleccionados = [];
 
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
     creadorFuture = dbHelper.obtenerUsuarioID(widget.receta.creadorId);
     equipoFuture = dbHelper.obtenerEquipoPorId(widget.receta.equipoNecesarioId);
@@ -41,14 +43,17 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
   }
 
   // Función para generar el resumen de la receta (nombre, ingredientes y pasos)
-  String _generarResumen() {
+  String _generarResumen() 
+  {
 
     dbHelper.obtenerIngredientesPorReceta(widget.receta.id!);
     List<String> ingredientesSeleccionados = [];
-    for (int i = 0; i < ingredientes.length; i++) {
+    for (int i = 0; i < ingredientes.length; i++) 
+    {
         String ingredienteTexto = ingredientes[i]!.nombreIngrediente;
       // Verificamos si el ingrediente está marcado como faltante
-      if (_seleccionados[i]) {
+      if (_seleccionados[i]) 
+      {
         ingredienteTexto += " (Faltante)\n\n";
       }
       ingredientesSeleccionados.add(ingredienteTexto);
@@ -59,31 +64,43 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
     String resumen = 'Receta: ${widget.receta.nombreReceta}\n\n';
     resumen += 'Ingredientes:\n ${ingredientesSeleccionados.join(' ')}\n';
     resumen += 'Pasos a seguir:\n';
-    for (int i = 0; i < pasos.length; i++) {
+    for (int i = 0; i < pasos.length; i++) 
+    {
       resumen += '${i + 1}. ${pasos[i]}\n';
     }
-
     return resumen;
   }
 
-  Future<void> _mostrarSeleccionIngredientes() async {
-    showDialog(
+  Future<void> _mostrarSeleccionIngredientes() async 
+  {
+    showDialog
+    (
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext context) 
+      {
         // Usamos un StatefulBuilder para que el setState funcione dentro del dialog
-        return StatefulBuilder(
-          builder: (BuildContext context, setStateDialog) {
-            return AlertDialog(
+        return StatefulBuilder
+        (
+          builder: (BuildContext context, setStateDialog) 
+          {
+            return AlertDialog
+            (
               title: const Text('Ingredientes faltantes'),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: List.generate(ingredientes.length, (index) {
+              content: SingleChildScrollView
+              (
+                child: Column
+                (
+                  children: List.generate(ingredientes.length, (index) 
+                  {
                     final ingrediente = ingredientes[index];
-                    return CheckboxListTile(
+                    return CheckboxListTile
+                    (
                       title: Text(ingrediente!.nombreIngrediente),
                       value: _seleccionados[index],
-                      onChanged: (bool? value) {
-                        setStateDialog(() {
+                      onChanged: (bool? value) 
+                      {
+                        setStateDialog(() 
+                        {
                           _seleccionados[index] = value ?? false;
                         });
                       },
@@ -91,15 +108,19 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                   }),
                 ),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
+              actions: 
+              [
+                TextButton
+                (
+                  onPressed: () 
+                  {
                     Navigator.of(context).pop();
                     _compartirReceta();
                   },
                   child: const Text('Compartir'),
                 ),
-                TextButton(
+                TextButton
+                (
                   onPressed: () => Navigator.of(context).pop(),
                   child: const Text('Cancelar'),
                 ),
@@ -111,20 +132,20 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
     );
   }
 
-
   // Función para compartir la receta con la imagen
-  Future<void> _compartirReceta() async {
+  Future<void> _compartirReceta() async 
+  {
     final resumen = _generarResumen();
     final recetaActual = await dbHelper.obtenerRecetaPorId(widget.receta.id!);
     final String imagenPath = recetaActual!.imagen;
 
-    try {
+    try 
+    {
       // Si la imagen está en los assets
-      if (imagenPath.startsWith('assets/')) {
+      if (imagenPath.startsWith('assets/')) 
+      {
         // Lee la imagen desde los assets
         final ByteData data = await rootBundle.load(imagenPath);
-
-        // Crea un archivo temporal para guardar la imagen
         final Directory tempDir = await getTemporaryDirectory();
         final String tempPath = '${tempDir.path}/temp_image.png';
         final File tempFile = File(tempPath);
@@ -135,29 +156,34 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
         // Ahora compartimos el archivo temporal
         final XFile imagen = XFile(tempPath);
         await Share.shareXFiles([imagen], text: resumen);
-      } else {
-        // Si la imagen ya es un archivo local, compartirla directamente
+      } else 
+      {
         final XFile imagen = XFile(imagenPath);  // La ruta ya es un archivo
         await Share.shareXFiles([imagen], text: resumen);
       }
-    } catch (e) {
+    } catch (e) 
+    {
       // ignore: avoid_print
       print("Error al compartir la receta: $e");
-      await Share.share(resumen);  // En caso de que ocurra un error, solo compartir el resumen
+      await Share.share(resumen);
     }
   }
 
   Widget _mostrarImagen(String rutaImagen) 
   {
-    if (rutaImagen.startsWith('assets/')) {
-      return Image.asset(
+    if (rutaImagen.startsWith('assets/')) 
+    {
+      return Image.asset
+      (
         rutaImagen,
         width: double.infinity,
         height: 200,
         fit: BoxFit.contain,
       );
-    } else {
-      return Image.file(
+    } else 
+    {
+      return Image.file
+      (
         File(rutaImagen),
         width: double.infinity,
         height: 200,
@@ -167,24 +193,34 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+  Widget build(BuildContext context) 
+  {
+    return Scaffold
+    (
+      appBar: AppBar
+      (
         backgroundColor: const Color(0xFFD9AB82),
         title: Text(widget.receta.nombreReceta),
-        actions: [
-          IconButton(
-            icon: Icon(
+        actions: 
+        [
+          IconButton
+          (
+            icon: Icon
+            (
               _esFavorita ? Icons.favorite : Icons.favorite_border,
               color: _esFavorita ? Colors.red : null,
             ),
-            onPressed: () {
-              setState(() {
-                if (_esFavorita) {
+            onPressed: () 
+            {
+              setState(() 
+              {
+                if (_esFavorita) 
+                {
                   widget.usuarioActual.eliminarFavorita(widget.receta.id!);
                   dbHelper.updateUsuario(widget.usuarioActual);  // Actualizar en la base de datos
                   _esFavorita = false;
-                } else {
+                } else 
+                {
                   widget.usuarioActual.agregarFavorita(widget.receta.id!);
                   dbHelper.updateUsuario(widget.usuarioActual);
                   _esFavorita = true;
@@ -192,13 +228,18 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               });
             },
           ),
-          IconButton(
+          IconButton
+          (
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () 
+            {
+              Navigator.push
+              (
                 context,
-                MaterialPageRoute(
-                  builder: (context) => EditarRecetaScreen(
+                MaterialPageRoute
+                (
+                  builder: (context) => EditarRecetaScreen
+                  (
                     receta: widget.receta,
                     usuarioActual: widget.usuarioActual,
                   ),
@@ -206,18 +247,23 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               );
             },
           ),
-          IconButton(
+          IconButton
+          (
             icon: const Icon(Icons.share),
             onPressed: _mostrarSeleccionIngredientes,
           ),
         ],
       ),
-      body: Padding(
+      body: Padding
+      (
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
+        child: SingleChildScrollView
+        (
+          child: Column
+          (
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: 
+            [
               // Imagen de la receta
               _mostrarImagen(widget.receta.imagen),
               const SizedBox(height: 20),
@@ -227,14 +273,18 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               const SizedBox(height: 20),
 
               // Método de preparación
-              Row(
-                children: [
-                  const Text(
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
                     'Veces preparada:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 5),
-                  Text(
+                  Text
+                  (
                     widget.receta.vecesPreparada.toString(),
                     style: const TextStyle(fontSize: 18),
                   ),
@@ -243,14 +293,18 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               const SizedBox(height: 10),
 
               // Método de preparación
-              Row(
-                children: [
-                  const Text(
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
                     'Método de Preparación:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 5),
-                  Text(
+                  Text
+                  (
                     widget.receta.metodo,
                     style: const TextStyle(fontSize: 18),
                   ),
@@ -259,14 +313,18 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               const SizedBox(height: 10),
 
               // Dificultad
-              Row(
-                children: [
-                  const Text(
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
                     'Dificultad:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 5),
-                  Text(
+                  Text
+                  (
                     widget.receta.dificultad,
                     style: const TextStyle(fontSize: 18),
                   ),
@@ -275,18 +333,23 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               const SizedBox(height: 10),
 
               // Tiempo de preparación
-              Row(
-                children: [
-                  const Text(
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
                     'Tiempo de Preparación:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 5),
-                  Text(
+                  Text
+                  (
                     widget.receta.tiempoPreparacion.toString(),
                     style: const TextStyle(fontSize: 18),
                   ),
-                  const Text(
+                  const Text
+                  (
                     ' minutos',
                     style: TextStyle(fontSize: 18),
                   ),
@@ -295,25 +358,35 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               const SizedBox(height: 10),
 
               // Autor de la receta
-              FutureBuilder<Usuario?>(
-                future: creadorFuture,  // Usamos Future<Usuario?>
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();  // Mientras carga
-                  } else if (snapshot.hasError) {
+              FutureBuilder<Usuario?>
+              (
+                future: creadorFuture,
+                builder: (context, snapshot) 
+                {
+                  if (snapshot.connectionState == ConnectionState.waiting) 
+                  {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) 
+                  {
                     return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data == null) {
+                  } else if (!snapshot.hasData || snapshot.data == null) 
+                  {
                     return const Text('No se pudo cargar el creador');
-                  } else {
+                  } else 
+                  {
                     final creador = snapshot.data!;
-                    return Row(
-                      children: [
-                        const Text(
+                    return Row
+                    (
+                      children: 
+                      [
+                        const Text
+                        (
                           'Autor:',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(width: 5),
-                        Text(
+                        Text
+                        (
                           creador.nombre,
                           style: const TextStyle(fontSize: 18),
                         ),
@@ -325,15 +398,19 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               const SizedBox(height: 10),
 
               // Fecha de creación de la receta
-              Row(
-                children: [
-                  const Text(
+              Row
+              (
+                children: 
+                [
+                  const Text
+                  (
                     'Fecha de Creación:',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 5),
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(widget.receta.fechaCreacion), // Formato personalizado
+                  Text
+                  (
+                    DateFormat('dd/MM/yyyy').format(widget.receta.fechaCreacion),
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
@@ -344,37 +421,50 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               const Text('Ingredientes', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 2),
 
-              FutureBuilder<List<Ingrediente>>(
+              FutureBuilder<List<Ingrediente>>
+              (
                 future: dbHelper.obtenerIngredientesPorReceta(widget.receta.id!),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                builder: (context, snapshot) 
+                {
+                  if (snapshot.connectionState == ConnectionState.waiting) 
+                  {
                     return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
+                  } else if (snapshot.hasError) 
+                  {
                     return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) 
+                  {
                     return const Text('No se encontraron ingredientes');
-                  } else {
+                  } else 
+                  {
                     ingredientes = snapshot.data!;
 
-                    // Solo inicializa _seleccionados si la longitud no coincide
-                    if (_seleccionados.length != ingredientes.length) {
+                    if(_seleccionados.length != ingredientes.length) 
+                    {
                       _seleccionados = List.generate(ingredientes.length, (_) => false);
                     }
-                    return ListView.builder(
+                    return ListView.builder
+                    (
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: ingredientes.length,
-                      itemBuilder: (context, index) {
+                      itemBuilder: (context, index) 
+                      {
                         final ingrediente = ingredientes[index];
 
-                        return ListTile(
-                          title: Row(
-                            children: [
-                              Text(
+                        return ListTile
+                        (
+                          title: Row
+                          (
+                            children: 
+                            [
+                              Text
+                              (
                                 '${ingrediente?.nombreIngrediente}: ',
                                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              Text(
+                              Text
+                              (
                                 '${ingrediente?.cantidad} ${ingrediente?.unidadMedida}',
                                 style: const TextStyle(fontSize: 18),
                               ),
@@ -386,29 +476,33 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                   }
                 },
               ),
-
               const SizedBox(height: 10),
-
               // Equipo necesario
               const Text('Equipo Necesario', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-
-              // FutureBuilder para el equipo
-              FutureBuilder<Equipo?>(
+              FutureBuilder<Equipo?>
+              (
                 future: equipoFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                builder: (context, snapshot) 
+                {
+                  if (snapshot.connectionState == ConnectionState.waiting) 
+                  {
                     return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
+                  } else if (snapshot.hasError) 
+                  {
                     return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData) {
+                  } else if (!snapshot.hasData)
+                  {
                     return const Text('No se pudo cargar el equipo');
-                  } else {
+                  } else 
+                  {
                     final equipo = snapshot.data!;
-                    return Card(
+                    return Card
+                    (
                       elevation: 4.0,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ListTile(
+                      child: ListTile
+                      (
                         title: Text('${equipo.nombreEquipo} (${equipo.tipo})'),
                         subtitle: Text(equipo.descripcion),
                         leading: Image.asset(equipo.imagen, width: 50, height: 50),
@@ -417,36 +511,40 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                   }
                 },
               ),
-
               const SizedBox(height: 20),
-
-              // Proceso de elaboración
               const Text('Elaboración:', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-
-              // ListView numerado para los pasos de elaboración
-              ListView.builder(
+              ListView.builder
+              (
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.receta.elaboracion.length,
-                itemBuilder: (context, index) {
-                  return Container(
+                itemBuilder: (context, index) 
+                {
+                  return Container
+                  (
                     margin: const EdgeInsets.only(bottom: 10.0),
                     padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
+                    decoration: BoxDecoration
+                    (
                       color: const Color(0xFFD9AB82),
                       borderRadius: BorderRadius.circular(8.0),
                       border: Border.all(color: Colors.grey),
                     ),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
+                    child: Row
+                    (
+                      children: 
+                      [
+                        CircleAvatar
+                        (
                           backgroundColor: const Color(0xFFA6785D),
                           child: Text('${index + 1}', style: const TextStyle(color: Color.fromARGB(255, 255, 252, 252))),
                         ),
                         const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
+                        Expanded
+                        (
+                          child: Text
+                          (
                             widget.receta.elaboracion[index],
                             style: const TextStyle(fontSize: 16, color: Colors.white),
                           ),
@@ -457,10 +555,12 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Llamada a la función para concluir la preparación
+              Center
+              (
+                child: ElevatedButton
+                (
+                  onPressed: ()
+                  {
                     _concluirPreparacion(widget.receta.id!);
                   },
                   child: Text('Concluir preparación'),
@@ -474,27 +574,29 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
   }
 
   // Llamada al método para concluir la preparación
-  void _concluirPreparacion(int recetaId) async {
-    try {
-      // Llamamos a la función para incrementar 'vecesPreparada' en la base de datos
+  void _concluirPreparacion(int recetaId) async 
+  {
+    try 
+    {
       await DatabaseHelper().incrementarVecesPreparada(recetaId);
 
-      setState(() {
+      setState(() 
+      {
         widget.receta.vecesPreparada += 1;
       });
       
-      // Aquí puedes agregar código adicional, como mostrar un mensaje de éxito
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar
+      (
         SnackBar(content: Text('Preparación concluida. ¡Receta registrada!'))
       );
-    } catch (e) {
-      // Manejo de errores en caso de que algo falle
+    } catch (e) 
+    {
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar
+      (
         SnackBar(content: Text('Error al concluir la preparación.'))
       );
     }
   }
-
 }
