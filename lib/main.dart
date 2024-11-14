@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'dart:convert'; // Para manejar JSON
-import 'pages/splash_screen.dart'; // Importar SplashScreen
-import 'pages/session_screen.dart'; // Importar SessionScreen
-import 'pages/tab_bar.dart'; // Importar TabBarController
-import 'models/usuario.dart'; // Asegúrate de importar Usuario
-import 'models/database_helper.dart'; // Si necesitas trabajar con la base de datos
-import 'package:path/path.dart';
+import 'pages/splash_screen.dart';
+import 'pages/session_screen.dart';
+import 'pages/tab_bar.dart';
+import 'models/usuario.dart';
+import 'models/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 // Función para eliminar la base de datos
-Future<void> eliminarBaseDeDatos() async {
-  // Obtén la ruta de la base de datos
-  String path = join(await getDatabasesPath(), 'coffeQuest.db');
-  
+Future<void> eliminarBaseDeDatos() async 
+{
   // Elimina la base de datos
-  await deleteDatabase(path);
-  
-  print("Base de datos eliminada.");
+  //await deleteDatabase(path);
 }
-
 
 void main() async
 {
@@ -29,8 +22,6 @@ void main() async
 
   // Inicializa la base de datos
   var dbHelper = DatabaseHelper();
-  var db = await dbHelper.database;
-
   runApp(const MyApp());
 
   // Crea un usuario por defecto
@@ -142,18 +133,6 @@ Future<void> verificarRecetasExistentes(DatabaseHelper dbHelper) async {
 
     // Imprime los datos de los usuarios obtenidos
     if (usuarios.isNotEmpty) {
-      //logger.i("Usuarios encontrados en la base de datos:");
-      for (var usuario in usuarios) {
-        /*
-        logger.i("Nombre: ${usuario.id}");
-        logger.i("Nombre: ${usuario.nombre}");
-        logger.i("Email: ${usuario.email}");
-        logger.i("Método favorito: ${usuario.metodoFavorito}");
-        logger.i("Tipo de grano favorito: ${usuario.tipoGranoFavorito}");
-        logger.i("Nivel de molienda: ${usuario.nivelMolienda}");
-        logger.i("Recetas favoritas: ${usuario.recetasFavoritas}");
-        */
-      }
       return true;
     } else {
       logger.i("No hay usuarios en la base de datos.");

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:coffee_quest/models/receta_cafe.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,12 +49,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  // Método para mostrar imagen, verificando si es de los assets o un archivo local
+  Widget _mostrarImagen(String rutaImagen) {
+    if (rutaImagen.startsWith('assets/')) {
+      return Image.asset(
+        rutaImagen,
+        width: 50,  // Tamaño ajustado para miniatura
+        height: 50,
+        fit: BoxFit.cover,  // Ajuste para miniaturas
+      );
+    } else {
+      return Image.file(
+        File(rutaImagen),
+        width: 50,  // Tamaño ajustado para miniatura
+        height: 50,
+        fit: BoxFit.cover,  // Ajuste para miniaturas
+      );
+    }
+  }
+
   Future<List<RecetaCafe>> _loadRecetasFavoritas() async {
     List<int> recetaIds = usuarioActual.recetasFavoritas;
 
     // Verificar que la lista de IDs no esté vacía
     if (recetaIds.isEmpty) {
-      print('No hay recetas favoritas para cargar.');
       return [];
     }
 
@@ -216,7 +236,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: ListTile(
                             title: Text(recetasFavoritasCargadas[index].nombreReceta),
                             subtitle: Text(recetasFavoritasCargadas[index].descripcion),
-                            leading: Image.asset(recetasFavoritasCargadas[index].imagen, width: 50, height: 50),
+                            leading: SizedBox(
+                              width: 50,  // Ajusta el tamaño según lo necesites
+                              height: 50,
+                              child: _mostrarImagen(recetasFavoritasCargadas[index].imagen),
+                            ),
                             onTap: () {
                               Navigator.push(
                                 context,

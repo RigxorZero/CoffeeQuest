@@ -8,6 +8,8 @@ import 'edit_receta_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 
 class DetalleRecetaScreen extends StatefulWidget 
@@ -26,6 +28,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
   bool _esFavorita = false;
   late Future<Usuario?> creadorFuture;
   late Future<Equipo?> equipoFuture;
+  List<Ingrediente?> ingredientes = [];
   List<bool> _seleccionados = [];
 
   @override
@@ -39,17 +42,22 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
 
   // Función para generar el resumen de la receta (nombre, ingredientes y pasos)
   String _generarResumen() {
+
+    dbHelper.obtenerIngredientesPorReceta(widget.receta.id!);
     List<String> ingredientesSeleccionados = [];
-    for (int i = 0; i < widget.receta.ingredientes.length; i++) {
+    for (int i = 0; i < ingredientes.length; i++) {
+        String ingredienteTexto = ingredientes[i]!.nombreIngrediente;
+      // Verificamos si el ingrediente está marcado como faltante
       if (_seleccionados[i]) {
-        ingredientesSeleccionados.add(widget.receta.ingredientes[i].nombreIngrediente);
+        ingredienteTexto += " (Faltante)\n\n";
       }
+      ingredientesSeleccionados.add(ingredienteTexto);
     }
 
     List<String> pasos = widget.receta.elaboracion;
 
     String resumen = 'Receta: ${widget.receta.nombreReceta}\n\n';
-    resumen += 'Ingredientes: ${ingredientesSeleccionados.join(', ')}\n\n';
+    resumen += 'Ingredientes:\n ${ingredientesSeleccionados.join(' ')}\n';
     resumen += 'Pasos a seguir:\n';
     for (int i = 0; i < pasos.length; i++) {
       resumen += '${i + 1}. ${pasos[i]}\n';
@@ -58,22 +66,103 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
     return resumen;
   }
 
-  // Función para compartir la receta con la imagen
-  void _compartirReceta() async {
-    final resumen = _generarResumen();
-    final String? imagenPath = widget.receta.imagen;
+  Future<void> _mostrarSeleccionIngredientes() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // Usamos un StatefulBuilder para que el setState funcione dentro del dialog
+        return StatefulBuilder(
+          builder: (BuildContext context, setStateDialog) {
+            return AlertDialog(
+              title: const Text('Ingredientes faltantes'),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: List.generate(ingredientes.length, (index) {
+                    final ingrediente = ingredientes[index];
+                    return CheckboxListTile(
+                      title: Text(ingrediente!.nombreIngrediente),
+                      value: _seleccionados[index],
+                      onChanged: (bool? value) {
+                        setStateDialog(() {
+                          _seleccionados[index] = value ?? false;
+                        });
+                      },
+                    );
+                  }),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _compartirReceta();
+                  },
+                  child: const Text('Compartir'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancelar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
-    // Si la imagen está disponible, la compartimos junto con el resumen
-    if (imagenPath != null && File(imagenPath).existsSync()) {
-      // Compartimos tanto el texto como la imagen
-      final XFile imagen = XFile(imagenPath);
-      await Share.shareXFiles(
-        [imagen], // La imagen que deseas compartir
-        text: resumen, // El texto con el resumen de la receta
+
+  // Función para compartir la receta con la imagen
+  Future<void> _compartirReceta() async {
+    final resumen = _generarResumen();
+    final recetaActual = await dbHelper.obtenerRecetaPorId(widget.receta.id!);
+    final String imagenPath = recetaActual!.imagen;
+
+    try {
+      // Si la imagen está en los assets
+      if (imagenPath.startsWith('assets/')) {
+        // Lee la imagen desde los assets
+        final ByteData data = await rootBundle.load(imagenPath);
+
+        // Crea un archivo temporal para guardar la imagen
+        final Directory tempDir = await getTemporaryDirectory();
+        final String tempPath = '${tempDir.path}/temp_image.png';
+        final File tempFile = File(tempPath);
+
+        // Escribe los bytes en el archivo temporal
+        await tempFile.writeAsBytes(data.buffer.asUint8List());
+
+        // Ahora compartimos el archivo temporal
+        final XFile imagen = XFile(tempPath);
+        await Share.shareXFiles([imagen], text: resumen);
+      } else {
+        // Si la imagen ya es un archivo local, compartirla directamente
+        final XFile imagen = XFile(imagenPath);  // La ruta ya es un archivo
+        await Share.shareXFiles([imagen], text: resumen);
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error al compartir la receta: $e");
+      await Share.share(resumen);  // En caso de que ocurra un error, solo compartir el resumen
+    }
+  }
+
+  Widget _mostrarImagen(String rutaImagen) 
+  {
+    if (rutaImagen.startsWith('assets/')) {
+      return Image.asset(
+        rutaImagen,
+        width: double.infinity,
+        height: 200,
+        fit: BoxFit.contain,
       );
     } else {
-      // Si no hay imagen, solo compartimos el texto
-      await Share.share(resumen);
+      return Image.file(
+        File(rutaImagen),
+        width: double.infinity,
+        height: 200,
+        fit: BoxFit.contain,
+      );
     }
   }
 
@@ -117,6 +206,10 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
               );
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: _mostrarSeleccionIngredientes,
+          ),
         ],
       ),
       body: Padding(
@@ -126,7 +219,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Imagen de la receta
-              Image.asset(widget.receta.imagen, width: double.infinity, height: 200, fit: BoxFit.contain),
+              _mostrarImagen(widget.receta.imagen),
               const SizedBox(height: 20),
 
               // Descripción de la receta
@@ -261,8 +354,9 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Text('No se encontraron ingredientes');
                   } else {
-                    final ingredientes = snapshot.data!;
-                    // Inicializa la lista _seleccionados con el tamaño de ingredientes
+                    ingredientes = snapshot.data!;
+
+                    // Solo inicializa _seleccionados si la longitud no coincide
                     if (_seleccionados.length != ingredientes.length) {
                       _seleccionados = List.generate(ingredientes.length, (_) => false);
                     }
@@ -272,37 +366,23 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                       itemCount: ingredientes.length,
                       itemBuilder: (context, index) {
                         final ingrediente = ingredientes[index];
-                        
-                        // Asegurarse de que _seleccionados tenga el tamaño adecuado
-                        if (_seleccionados.length != ingredientes.length) {
-                          _seleccionados = List.generate(ingredientes.length, (_) => false);
-                        }
 
                         return ListTile(
                           title: Row(
                             children: [
                               Text(
-                                '${ingrediente.nombreIngrediente}: ',
+                                '${ingrediente?.nombreIngrediente}: ',
                                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '${ingrediente.cantidad} ${ingrediente.unidadMedida}',
+                                '${ingrediente?.cantidad} ${ingrediente?.unidadMedida}',
                                 style: const TextStyle(fontSize: 18),
                               ),
                             ],
                           ),
-                          trailing: Checkbox(
-                            value: _seleccionados[index],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _seleccionados[index] = value!;
-                              });
-                            },
-                          ),
                         );
                       },
                     );
-
                   }
                 },
               ),
@@ -377,18 +457,6 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              // Botón para compartir
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    final resumen = _generarResumen();
-                    // Compartir el resumen usando share_plus
-                    Share.share(resumen);
-                  },
-                  child: const Text('Compartir Receta'),
-                ),
-              ),
-              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -416,11 +484,13 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
       });
       
       // Aquí puedes agregar código adicional, como mostrar un mensaje de éxito
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Preparación concluida. ¡Receta registrada!'))
       );
     } catch (e) {
       // Manejo de errores en caso de que algo falle
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al concluir la preparación.'))
       );

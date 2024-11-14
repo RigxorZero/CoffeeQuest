@@ -13,6 +13,7 @@ class SessionScreen extends StatefulWidget {
 
 class _SessionScreenState extends State<SessionScreen> {
   String? _usuario;
+  // ignore: unused_field
   String? _correo;
 
   final TextEditingController _nombreController = TextEditingController();
@@ -46,6 +47,7 @@ class _SessionScreenState extends State<SessionScreen> {
           });
 
           Navigator.pushReplacementNamed(
+            // ignore: use_build_context_synchronously
             context, 
             '/home', 
             arguments: usuario,  // Pasamos el usuario como argumento a la pantalla de inicio
@@ -54,9 +56,6 @@ class _SessionScreenState extends State<SessionScreen> {
         }
       }
     }
-
-    // Si no se encontró ningún usuario con nombre distinto a "CoffeeQuest"
-    print("No se encontró un usuario válido distinto de 'CoffeeQuest'.");
   }
 
 
@@ -87,6 +86,7 @@ class _SessionScreenState extends State<SessionScreen> {
 
     // Navega al home con el usuario recién creado
     Navigator.pushReplacementNamed(
+      // ignore: use_build_context_synchronously
       context,
       '/home',
       arguments: nuevoUsuario,

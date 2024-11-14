@@ -534,6 +534,33 @@ Future<void> updateUsuario(Usuario usuario) async
   );
 }
 
+  // Método para eliminar una receta de la base de datos
+  Future<void> eliminarReceta(int recetaId) async {
+    var db = await database;
+    
+    try {
+      // Primero, eliminamos los ingredientes relacionados con la receta de la tabla intermedia 'receta_ingredientes'
+      await db.delete(
+        'receta_ingredientes',
+        where: 'recetaId = ?',
+        whereArgs: [recetaId],
+      );
+
+      // Luego, eliminamos la receta de la tabla 'recetas'
+      await db.delete(
+        'recetas',
+        where: 'id = ?',
+        whereArgs: [recetaId],
+      );
+
+      logger.i("Receta con ID $recetaId eliminada exitosamente.");
+    } catch (e) {
+      logger.e("Error al eliminar la receta con ID $recetaId: $e");
+      rethrow;
+    }
+  }
+
+
 
   // Método para obtener un usuario por su Nombre
   Future<Usuario?> obtenerUsuario(String nombre) async 

@@ -9,11 +9,15 @@ import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+// ignore: depend_on_referenced_packages
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
+
 
 class CrearRecetaScreen extends StatefulWidget {
   final Usuario usuario;
 
-  CrearRecetaScreen({super.key, required this.usuario});
+  const CrearRecetaScreen({super.key, required this.usuario});
 
   @override
   State<CrearRecetaScreen> createState() => _CrearRecetaScreenState();
@@ -36,6 +40,7 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
   bool _isCameraInitialized = false;
   String? _imagenReceta;
   final ImagePicker _picker = ImagePicker();
+  bool _isImagePickerActive = false;
 
   List<String> _pasos = []; // Lista combinada de pasos
   List<Ingrediente> _ingredientes = [];
@@ -44,6 +49,7 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
   bool _isRecetaGuardada = false;
   String? _metodoSeleccionado;
   String? _dificultadSeleccionada;
+  bool _camaraVisible = true;
 
   // Listas para seleccionar dificultad y método
   final List<String> _unidadesMedida = [
@@ -130,6 +136,7 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
         _unidadMedidaController.clear();
       });
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Ingrediente agregado o actualizado con éxito")),
       );
@@ -173,14 +180,13 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
     if (nuevaReceta.id != null) {
       widget.usuario.agregarFavorita(nuevaReceta.id!);
       await dbHelper.updateUsuario(widget.usuario);
-    } else {
-      print("Error: El ID de la receta es null y no se puede agregar a favoritas.");
     }
 
     _isRecetaGuardada = true;
 
     // Navegar a la pantalla de detalles
     Navigator.pushAndRemoveUntil(
+      // ignore: use_build_context_synchronously
       context,
       MaterialPageRoute(
         builder: (context) => const TabBarController(),
@@ -199,8 +205,6 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
       {
         _ingredientes.removeAt(index);
       });
-    } else {
-      print("Índice fuera de rango: $index");
     }
   }
 
@@ -237,6 +241,7 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
       );
 
       if (confirmExit == true) {
+        // ignore: use_build_context_synchronously
         Navigator.pop(context); // Permite el retroceso
       }
     } else {
@@ -245,52 +250,86 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
   }
 
   // Solicitar permisos de cámara y almacenamiento
-  Future<void> _requestPermissions() async {
-    PermissionStatus cameraStatus = await Permission.camera.request();
-    if (cameraStatus.isGranted) {
-      print("Permiso de cámara concedido");
-      _initializeCamera();  // Inicializa la cámara si el permiso es concedido
-    } else {
-      print("Permiso de cámara denegado");
-    }
-
-    PermissionStatus storageStatus = await Permission.storage.request();
-    if (storageStatus.isGranted) {
-      print("Permiso de almacenamiento concedido");
-    } else {
-      print("Permiso de almacenamiento denegado");
-    }
+  Future<void> _requestPermissions() async
+  {
+    await Permission.camera.request();
+    await Permission.storage.request();
   }
 
-  // Inicializa la cámara después de que se conceden los permisos
+
+  // Función para inicializar la cámara
   Future<void> _initializeCamera() async {
-    _cameras = await availableCameras();
-    _cameraController = CameraController(_cameras[0], ResolutionPreset.high);
+    // Verifica si ya está inicializada
+    if (_isCameraInitialized) return;
 
-    await _cameraController.initialize();
-    setState(() {
-      _isCameraInitialized = true;
-    });
+    try {
+      _cameras = await availableCameras();
+      _cameraController = CameraController(
+        _cameras[0], // Selecciona la primera cámara disponible
+        ResolutionPreset.high,
+      );
+
+      await _cameraController.initialize();
+      setState(() {
+        _isCameraInitialized = true; // Marcar como inicializada
+      });
+    } catch (e) {
+      print("Error al inicializar la cámara: $e");
+      // Puedes manejar el error aquí si es necesario
+    }
   }
 
-  // Toma una foto con la cámara
+  // Función que toma la foto
   Future<void> _takePicture() async {
+    // Verificar que la cámara esté inicializada
+    if (!_isCameraInitialized) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("La cámara no está lista. Intente nuevamente.")),
+      );
+      return;
+    }
+
     try {
       final XFile file = await _cameraController.takePicture();
+
+      // Redimensionar la imagen después de tomarla
+      final img.Image image = img.decodeImage(await file.readAsBytes())!;
+      final img.Image resizedImage = img.copyResize(image, width: 400, height: 400);
+
+      // Guardar la imagen redimensionada
+      final resizedFile = File('${(await getTemporaryDirectory()).path}/resized_image.png')
+        ..writeAsBytesSync(img.encodePng(resizedImage));
+
       setState(() {
-        _imagenReceta = file.path;  // Guardamos la ruta de la imagen
+        _imagenReceta = resizedFile.path;
+        _camaraVisible = false;
       });
     } catch (e) {
       print("Error al tomar la foto: $e");
     }
   }
 
-  // Seleccionar una imagen desde la galería
+
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    if (_isImagePickerActive) return;  // Si el picker ya está activo, no hacer nada.
+
+    setState(() {
+      _isImagePickerActive = true;  // Marcar como activo el selector de imagen.
+    });
+
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _imagenReceta = pickedFile.path;
+        });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error al seleccionar imagen: $e");
+    } finally {
       setState(() {
-        _imagenReceta = pickedFile.path;
+        _isImagePickerActive = false;  // Liberar el estado del selector de imagen.
       });
     }
   }
@@ -306,8 +345,9 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
   @override
   void initState() {
     super.initState();
-    _requestPermissions();
+    _initializeCamera();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -400,19 +440,22 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
                     return ListTile(
                       title: Row(
                         children: [
-                          Text('${ingrediente.nombreIngrediente}: ',
+                          Text(
+                            '${ingrediente.nombreIngrediente}: ',
                             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          Text('${ingrediente.cantidad} ${ingrediente.unidadMedida}',
+                          Text(
+                            '${ingrediente.cantidad} ${ingrediente.unidadMedida}',
                             style: const TextStyle(fontSize: 18),
                           ),
+                          Expanded(child: Container()), // Esto hace que el texto ocupe el espacio restante
                         ],
                       ),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Color.fromARGB(150, 244, 67, 54)),
                         onPressed: () {
                           final index = _ingredientes.indexOf(ingrediente);
-                                _eliminarIngrediente(ingrediente.ingredienteId!, index);
+                          _eliminarIngrediente(ingrediente.ingredienteId!, index);
                         },
                       ),
                     );
@@ -511,22 +554,33 @@ class _CrearRecetaScreenState extends State<CrearRecetaScreen> {
                 ),
                 const SizedBox(height: 20),
                 // Si la cámara está inicializada, muestra el preview
-                if (_isCameraInitialized)
+                if (_isCameraInitialized && _camaraVisible)
                   Center(  // Centra el preview de la cámara
-                    child: Container(
-                      height: 300,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 400,
                       child: CameraPreview(_cameraController),
                     ),
                   ),
 
                 // Botón para tomar una foto
-                Center(  // Centra el botón de tomar foto
+                Center(
                   child: ElevatedButton(
-                    onPressed: _takePicture,
+                    onPressed: () {
+                      if (_camaraVisible) {
+                        // Si la cámara está visible, toma la foto
+                        _takePicture();
+                      } else {
+                        // Si la cámara está oculta, la mostramos de nuevo
+                        setState(() {
+                          _camaraVisible = true;
+                        });
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD9AB82),
                     ),
-                    child: const Text('Tomar Foto'),
+                    child: Text(_camaraVisible ? 'Tomar Foto' : 'Mostrar Cámara'),
                   ),
                 ),
                 

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/receta_cafe.dart';
 import '../models/usuario.dart';
@@ -6,8 +7,8 @@ import '../models/equipo.dart';
 import 'details_receta_screen.dart';
 import '../models/database_helper.dart';
 
-class MyHomePage extends StatefulWidget 
-{
+// ignore: must_be_immutable
+class MyHomePage extends StatefulWidget {
   MyHomePage({super.key, required this.title, required this.usuario});
 
   String title;
@@ -17,31 +18,28 @@ class MyHomePage extends StatefulWidget
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> 
-{
+class _MyHomePageState extends State<MyHomePage> {
   List<RecetaCafe> _recetas = [];
+  // ignore: unused_field
   List<Ingrediente> _ingredientes = []; 
+  // ignore: unused_field
   List<Equipo> _equipos = [];
 
   @override
-  void initState() 
-  {
+  void initState() {
     super.initState();
     _loadData();
   }
 
   // Cargar los datos necesarios (ingredientes, equipos y recetas)
-  Future<void> _loadData() async 
-  {
+  Future<void> _loadData() async {
     await _loadIngredientes();
     await _loadEquipos();
     await _loadRecetas();
   }
 
   // Cargar ingredientes desde la base de datos
-  Future<void> _loadIngredientes() async 
-  {
-    // Obtener ingredientes desde la base de datos
+  Future<void> _loadIngredientes() async {
     var ingredientes = await DatabaseHelper().obtenerIngredientes();
     setState(() {
       _ingredientes = ingredientes;
@@ -49,9 +47,7 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   // Cargar equipos desde la base de datos
-  Future<void> _loadEquipos() async 
-  {
-    // Obtener equipos desde la base de datos
+  Future<void> _loadEquipos() async {
     var equipos = await DatabaseHelper().obtenerEquipos();
     setState(() {
       _equipos = equipos;
@@ -60,9 +56,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   // Cargar recetas desde la base de datos
   Future<void> _loadRecetas() async {
-    // Obtener recetas desde la base de datos
     var recetas = await DatabaseHelper().obtenerRecetas();
-    
     var usuarios = await DatabaseHelper().obtenerUsuarios();
     
     var idCoffeQuest = usuarios.firstWhere((usuario) => usuario.nombre == "CoffeeQuest").id;
@@ -75,36 +69,44 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
-
+  // Método para mostrar imagen, verificando si es de los assets o un archivo local
+  Widget _mostrarImagen(String rutaImagen) {
+    if (rutaImagen.startsWith('assets/')) {
+      return Image.asset(
+        rutaImagen,
+        width: 50,  // Tamaño ajustado para miniatura
+        height: 50,
+        fit: BoxFit.cover,  // Ajuste para miniaturas
+      );
+    } else {
+      return Image.file(
+        File(rutaImagen),
+        width: 50,  // Tamaño ajustado para miniatura
+        height: 50,
+        fit: BoxFit.cover,  // Ajuste para miniaturas
+      );
+    }
+  }
 
   @override
-  Widget build(BuildContext context) 
-  {
-    return Scaffold
-    (
-      body: ListView.builder
-      (
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView.builder(
         itemCount: _recetas.length,
-        itemBuilder: (context, index) 
-        {
+        itemBuilder: (context, index) {
           final receta = _recetas[index];
-          return Card
-          (
+          return Card(
             elevation: 4.0,
             margin: const EdgeInsets.all(8.0),
-            child: ListTile
-            (
+            child: ListTile(
               title: Text(receta.nombreReceta),
               subtitle: Text(receta.descripcion),
-              leading: Image.asset(receta.imagen, width: 50, height: 50),
-              onTap: () 
-              {
+              leading: _mostrarImagen(receta.imagen),
+              onTap: () {
                 // Navegar a la pantalla de detalles de la receta
-                Navigator.push
-                (
+                Navigator.push(
                   context,
-                  MaterialPageRoute
-                  (
+                  MaterialPageRoute(
                     builder: (context) => DetalleRecetaScreen(receta: receta, usuarioActual: widget.usuario),
                   ),
                 );

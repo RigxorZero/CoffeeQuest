@@ -97,6 +97,7 @@ class RecetaCafe {
   String get dificultad => _dificultad;
   int get tiempoPreparacion => _tiempoPreparacion;
   String get imagen => _imagen;
+  // ignore: unnecessary_getters_setters
   int get vecesPreparada => _vecesPreparada;
   int get creadorId => _creadorId;
   List<String> get elaboracion => _elaboracion;

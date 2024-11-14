@@ -1,11 +1,9 @@
 import 'package:coffee_quest/models/ingrediente.dart';
-import 'package:coffee_quest/pages/home_screen.dart';
 import 'package:coffee_quest/pages/tab_bar.dart';
 import 'package:flutter/material.dart';
 import '../models/database_helper.dart';
 import '../models/receta_cafe.dart';
 import '../models/usuario.dart';
-import '../pages/details_receta_screen.dart';
 import 'package:sqflite/sqflite.dart';
 
 class EditarRecetaScreen extends StatefulWidget {
@@ -95,11 +93,10 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
   helper.updateReceta(widget.receta.id!, nuevaReceta);
 
   // Agregar receta a la lista de favoritas del usuario
-  if (widget.receta.id != null) {
+  if (widget.receta.id != null) 
+  {
     widget.usuarioActual.agregarFavorita(widget.receta.id!);
     helper.updateUsuario(widget.usuarioActual);
-  } else {
-    print("Error: El ID de la receta es null y no se puede agregar a favoritas.");
   }
 
   _isRecetaGuardada = true;
@@ -185,9 +182,12 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
         _unidadMedidaController.clear();
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Ingrediente agregado o actualizado con éxito")),
-      );
+      if (mounted) 
+      {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Ingrediente agregado o actualizado con éxito")),
+        );
+      }
     }
   }
 
@@ -208,8 +208,6 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
       setState(() {
         _ingredientes.removeAt(index);
       });
-    } else {
-      print("Índice fuera de rango: $index");
     }
   }
 
@@ -235,7 +233,7 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
     // Inserta la nueva receta y obtiene su ID
     nuevaReceta.id = await dbHelper.insertReceta(nuevaReceta);
 
-    var ingredientesOriginales = await dbHelper.obtenerIngredientesPorReceta(_recetaOriginalId!);
+    var ingredientesOriginales = await dbHelper.obtenerIngredientesPorReceta(_recetaOriginalId);
 
     if (nuevaReceta.id != null) 
     {
@@ -258,10 +256,7 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
       setState(() {
         _ingredientes = ingredientes;  // Guardamos los ingredientes en la lista local
       });
-    } else {
-      print("Error al guardar la receta");
     }
-
     widget.receta.id = nuevaReceta.id;
   }
 
@@ -306,8 +301,7 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
                       );
                     }
                   }
-
-                  // Salir de la pantalla sin guardar
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, true); // Salir de la pantalla
                 },
                 child: const Text("Salir"),
@@ -318,13 +312,13 @@ class _EditarRecetaScreenState extends State<EditarRecetaScreen> {
       );
 
       if (confirmExit == true) {
+        // ignore: use_build_context_synchronously
         Navigator.pop(context); // Permite el retroceso
       }
     } else {
       Navigator.pop(context); // Si está guardada, permite el retroceso
     }
   }
-
 
 
   @override

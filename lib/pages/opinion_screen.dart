@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
+// ignore: use_key_in_widget_constructors
 class OpinionScreen extends StatefulWidget {
   @override
   _OpinionScreenState createState() => _OpinionScreenState();
@@ -12,8 +13,17 @@ class _OpinionScreenState extends State<OpinionScreen> {
   List<Map<String, dynamic>> usabilidad = [];
   List<Map<String, dynamic>> contenido = [];
   List<Map<String, dynamic>> compartir = [];
-  String userId = "";
+  String nombreUsuario = "";
+  String seleccionTipo = "Alumno trabajando en su piloto"; // Valor por defecto
+  String relacionConDesarrollador = "";
   Map<String, int> respuestas = {};
+
+  // Opciones para el dropdown
+  final List<String> tipoUsuarioOptions = [
+    "Alumno trabajando en su piloto",
+    "Persona del área de programación",
+    "Persona sin conocimientos técnicos"
+  ];
 
   @override
   void initState() {
@@ -33,30 +43,32 @@ class _OpinionScreenState extends State<OpinionScreen> {
   }
 
   // Enviar las respuestas por correo
-  Future<void> _enviarCorreo() async 
-  {
+  Future<void> _enviarCorreo() async {
     final Email email = Email(
       body: _generarCorreo(),
       subject: 'Retroalimentación de la aplicación',
       recipients: ['hvillalobos22@alumnos.utalca.cl'], // Cambia al correo del desarrollador
-      isHTML: false,
+      isHTML: true,
     );
     
     try {
       await FlutterEmailSender.send(email);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('¡Retroalimentación enviada!')),
       );
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al enviar el correo: $e')),
       );
+      print('Error al enviar el correo: $e');
     }
   }
 
   // Generar el cuerpo del correo con las respuestas
   String _generarCorreo() {
-    String respuestasCorreo = 'ID de Usuario: $userId\n\n';
+    String respuestasCorreo = 'Nombre de Usuario: $nombreUsuario\nTipo: $seleccionTipo\nRelación con el desarrollador: $relacionConDesarrollador\n\n';
     
     // Usabilidad
     respuestasCorreo += 'Usabilidad:\n';
@@ -64,11 +76,17 @@ class _OpinionScreenState extends State<OpinionScreen> {
       respuestasCorreo += '${pregunta['titulo']}\nRespuesta: ${pregunta['valor']} estrellas\n\n';
     });
     
+    // Añadir más espacio entre las secciones
+    respuestasCorreo += '\n'; // Agregar un salto de línea extra
+    
     // Contenido
     respuestasCorreo += 'Contenido:\n';
     contenido.forEach((pregunta) {
       respuestasCorreo += '${pregunta['titulo']}\nRespuesta: ${pregunta['valor']} estrellas\n\n';
     });
+
+    // Añadir más espacio entre las secciones
+    respuestasCorreo += '\n'; // Otro salto de línea
 
     // Compartir
     respuestasCorreo += 'Compartir:\n';
@@ -79,6 +97,7 @@ class _OpinionScreenState extends State<OpinionScreen> {
     return respuestasCorreo;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,20 +107,51 @@ class _OpinionScreenState extends State<OpinionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Campo de ID de usuario
+            // Campo de nombre de usuario
             TextField(
               onChanged: (value) {
                 setState(() {
-                  userId = value;
+                  nombreUsuario = value;
                 });
               },
               decoration: InputDecoration(
-                labelText: 'Tu ID',
-                hintText: 'Introduce tu ID de usuario',
+                labelText: 'Tu nombre',
+                hintText: 'Introduce tu nombre',
               ),
             ),
             SizedBox(height: 20),
             
+            // Dropdown para seleccionar el tipo de usuario
+            DropdownButton<String>(
+              value: seleccionTipo,
+              onChanged: (String? newValue) {
+                setState(() {
+                  seleccionTipo = newValue!;
+                });
+              },
+              items: tipoUsuarioOptions.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 20),
+
+            // Campo de relación con el desarrollador
+            TextField(
+              onChanged: (value) {
+                setState(() {
+                  relacionConDesarrollador = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Relación con el desarrollador',
+                hintText: 'Ej. Colega, Familiar, etc.',
+              ),
+            ),
+            SizedBox(height: 20),
+
             // Mostrar preguntas de Usabilidad
             Text('Usabilidad', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ...usabilidad.map((pregunta) {
