@@ -28,18 +28,8 @@ https://www.youtube.com/watch?v=KxvuP4FybVc&t=1s
 
 Para instalar y ejecutar este proyecto localmente:
 
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/usuario/coffee_quest.git
-2. Navega al directorio del proyecto.
-    ```bash
-    cd coffe_quest
-3. Instala las dependencias:
-    ```bash
-    flutter pub get
-4. Ejecuta la aplicación:
-    ```bash
-    flutter run
+[Descargar APK](CoffeQuest/CoffeQuest.apk)
+
 
 ---
 
