@@ -59,11 +59,11 @@ Se diseño el siguiente modelo relacional para comprender mejor como se comporta
 
 ### Diagrama de navegación
 En el siguiente diagrama se presenta la navegación entre las diferentes pantallas de la aplicación.
-![Coffee Quest Modelo Relacional](diagramas/CoffeeQuest _Navegacion.png)
+![Coffee Quest Navegacion](diagramas/CoffeeQuest_Navegacion.png)
 
 ### Diagrama de flujo de creación de recetas
 En el siguiente diagrama se presenta el flujo que debe realizar el usuario para crear una receta dentro de la aplicación.
-![Coffee Quest Modelo Relacional](diagramas/CoffeeQuest_FlujoReceta.png)
+![Coffee Quest Flujo](diagramas/CoffeeQuest_FlujoReceta.png)
 
 
 ---
