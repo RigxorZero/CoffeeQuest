@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-        package="cl.hvRigxor.coffee_quest">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="cl.hvrigxor.coffe_quest">
     <application
         android:label="Coffee Quest"
         android:name="${applicationName}"

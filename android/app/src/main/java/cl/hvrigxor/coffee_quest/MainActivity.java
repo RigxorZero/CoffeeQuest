@@ -1,4 +1,4 @@
-package cl.napelido.nombre;
+package cl.hvrigxor.coffe_quest;
 
 import io.flutter.embedding.android.FlutterActivity;
 
