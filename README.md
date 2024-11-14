@@ -3,7 +3,7 @@
 Un nuevo proyecto de Flutter para explorar y compartir recetas de café.
 
 **Link a presentación**
-https://www.youtube.com/watch?v=KxvuP4FybVc&t=1s
+[https://www.youtube.com/watch?v=KxvuP4FybVc&t=1s](https://youtu.be/vNPVPKUK0Rw)
 
 ## Tabla de Contenidos
 
