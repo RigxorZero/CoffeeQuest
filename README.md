@@ -10,11 +10,12 @@ Un nuevo proyecto de Flutter para explorar y compartir recetas de café.
 1. [Descripción del Proyecto](#descripción-del-proyecto)
 2. [Instalación](#instalación)
 3. [Uso](#uso)
-4. [Requerimientos](#requerimientos)
+4. [Diagramas](#diagramas)
+5. [Requerimientos](#requerimientos)
    - [Requerimientos Funcionales](#requerimientos-funcionales)
    - [Requerimientos No Funcionales](#requerimientos-no-funcionales)
-5. [Recursos Adicionales](#recursos-adicionales)
-6. [Documentación](#documentación)
+6. [Recursos Adicionales](#recursos-adicionales)
+7. [Documentación](#documentación)
 
 ---
 
